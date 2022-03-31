@@ -12,7 +12,9 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const fetchMovies = async () => {
     setIsLoading(true);
-    const movies = await axios.get(process.env.REACT_APP_HEROKU_SERVER);
+    const movies = await axios.get(
+      process.env.REACT_APP_HEROKU_SERVER + "api/get-movie-details"
+    );
     setIsLoading(false);
     const orderedByNewestMovies = orderBy(movies.data, ["timestamp"], ["desc"]);
     console.log(orderedByNewestMovies);
