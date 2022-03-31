@@ -1,0 +1,97 @@
+@import-normalize;
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
+body,
+* {
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto";
+  background: #0e2634;
+  color: rgb(219, 114, 102);
+  overflow: hidden;
+}
+
+.main-container {
+  height: calc(100vh - 160px);
+}
+
+.header {
+  height: 140px;
+  text-align: center;
+}
+
+.main {
+  height: calc(100% - 160px);
+  text-align: center;
+}
+
+.search-text {
+  height: 20px;
+  width: 400px;
+  background: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-top: 1.5em;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-text:focus,
+.search-text:active,
+.search-text {
+  border: none;
+  outline: none;
+}
+
+@media (max-width: 400px) {
+  .search-text {
+    width: 200px;
+  }
+}
+
+.movie-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 5px;
+  margin: 1.25em;
+  overflow: auto;
+  height: calc(100% - 90px);
+  cursor: pointer;
+}
+
+.movie-details {
+  margin: 10px;
+}
+
+.movie-cover {
+  height: 300px;
+}
+
+@media (max-width: 400px) {
+  .movie-cover {
+    height: auto;
+    width: 100%;
+  }
+}
+.movie-id {
+  position: relative;
+    display: block;
+  background-color: #89d4cf;
+  background-image: linear-gradient(315deg, #2e7097 0%, #75a5c1 74%);
+  padding: 0.5em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.footer {
+  height: 20px;
+}
+
+.spinner {
+  width: 100px;
+  height: 100px;
+}
