@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
+import { orderBy } from "lodash";
 import React, { useState, useEffect, useRef } from "react";
 import logo from "./../assets/logo.png";
 import Spinner from "./Spinner";
@@ -13,8 +14,10 @@ const Home = () => {
     setIsLoading(true);
     const movies = await axios.get(process.env.REACT_APP_HEROKU_SERVER);
     setIsLoading(false);
-    setAllMovies(movies.data);
-    setFilteredMovies(movies.data);
+    const orderedByNewestMovies = orderBy(movies.data, ["timestamp"], ["desc"]);
+    console.log(orderedByNewestMovies);
+    setAllMovies(orderedByNewestMovies);
+    setFilteredMovies(orderedByNewestMovies);
   };
 
   const searchHandler = (e) => {
