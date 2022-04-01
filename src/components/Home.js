@@ -8,17 +8,28 @@ import Spinner from "./Spinner";
 const Home = () => {
   const searchInput = useRef();
   const [allMovies, setAllMovies] = useState([]);
+  const [hasError, setHasError] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const fetchMovies = async () => {
     setIsLoading(true);
-    const movies = await axios.get(
-      process.env.REACT_APP_HEROKU_SERVER + "api/get-movie-details"
-    );
-    setIsLoading(false);
-    const orderedByNewestMovies = orderBy(movies.data, ["timestamp"], ["desc"]);
-    setAllMovies(orderedByNewestMovies);
-    setFilteredMovies(orderedByNewestMovies);
+    try {
+      const movies = await axios.get(
+        process.env.REACT_APP_HEROKU_SERVER + "api/get-movie-details"
+      );
+      setIsLoading(false);
+      const orderedByNewestMovies = orderBy(
+        movies.data,
+        ["timestamp"],
+        ["desc"]
+      );
+      setAllMovies(orderedByNewestMovies);
+      setFilteredMovies(orderedByNewestMovies);
+    } catch (e) {
+      console.log(e);
+      setHasError(true);
+      setIsLoading(false);
+    }
   };
 
   const searchHandler = (e) => {
@@ -68,6 +79,11 @@ const Home = () => {
           </div>
           <div className="movie-wrapper">
             {isLoading && <Spinner />}
+            {!isLoading && hasError && (
+              <h2>
+                Something went wrong, please check your internet connection...
+              </h2>
+            )}
             {!isLoading &&
               filteredMovies.map((movie, index) => (
                 <motion.div
