@@ -17,7 +17,6 @@ const Home = () => {
     );
     setIsLoading(false);
     const orderedByNewestMovies = orderBy(movies.data, ["timestamp"], ["desc"]);
-    console.log(orderedByNewestMovies);
     setAllMovies(orderedByNewestMovies);
     setFilteredMovies(orderedByNewestMovies);
   };
