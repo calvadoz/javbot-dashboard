@@ -64,7 +64,7 @@ const Home = () => {
     <React.Fragment>
       <div className="main-container">
         <header className="header">
-          <img src={logo} alt="logo" style={{ width: 200, height: 200 }} />
+          <img src={logo} alt="logo" style={{ width: 200, height: 200, marginTop: -40 }} />
         </header>
         <main className="main">
           <div className="input-wrapper">
