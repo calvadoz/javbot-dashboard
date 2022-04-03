@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { orderBy } from "lodash";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "./../assets/logo.png";
 import Spinner from "./Spinner";
 
@@ -11,6 +11,7 @@ const Home = () => {
   const [hasError, setHasError] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [serverVersion, setServerVersion] = useState("");
   const fetchMovies = async () => {
     setIsLoading(true);
     try {
@@ -55,8 +56,25 @@ const Home = () => {
     searchInput.current.focus();
   };
 
+  const getServerVersion = useCallback(async () => {
+    const serverVersionReq = await axios.get(
+      process.env.REACT_APP_HEROKU_SERVER + "api/get-version"
+    );
+    let sVersion = serverVersionReq.data;
+
+    sVersion =
+      sVersion === "development"
+        ? sVersion
+        : process.env.REACT_APP_SERVER_VERSION.replace(
+            "x",
+            sVersion.replace("v", "")
+          );
+    setServerVersion(sVersion);
+  }, []);
+
   useEffect(() => {
     searchInput.current.value = "";
+    getServerVersion();
     fetchMovies();
   }, []);
 
@@ -64,7 +82,11 @@ const Home = () => {
     <React.Fragment>
       <div className="main-container">
         <header className="header">
-          <img src={logo} alt="logo" style={{ width: 200, height: 200, marginTop: -40 }} />
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: 200, height: 200, marginTop: -40 }}
+          />
         </header>
         <main className="main">
           <div className="input-wrapper">
