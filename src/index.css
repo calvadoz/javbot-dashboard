@@ -1,6 +1,10 @@
 @import-normalize;
 @import url("https://fonts.googleapis.com/css?family=Montserrat");
 
+html {
+  scroll-behavior: smooth;
+}
+
 body,
 * {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -59,6 +63,27 @@ body,
   overflow: auto;
   height: calc(100% - 90px);
   cursor: pointer;
+  scrollbar-color: #6969dd #e0e0e0;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
 .movie-details {
@@ -78,7 +103,7 @@ body,
 }
 .movie-id {
   position: relative;
-    display: block;
+  display: block;
   background-color: #89d4cf;
   background-image: linear-gradient(315deg, #2e7097 0%, #75a5c1 74%);
   padding: 0.5em;
