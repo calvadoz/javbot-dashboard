@@ -133,7 +133,7 @@ body {
 
 .modal {
   width: clamp(10rem, 80%, 60rem);
-  height: auto;
+  height: 70%;
   margin: 0 auto;
   padding: 20px;
   background: #efefef;
@@ -146,4 +146,14 @@ body {
 
 .modal .javadoz-video {
   width: clamp(10rem, 90%, 60rem);
+}
+
+.modal .close-modal {
+  font-size: 30px;
+  padding: 12px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 0px;
+
 }

@@ -25,7 +25,6 @@ const Modal = ({ showModal, setShowModal, movie }) => {
     <AnimatePresence exitBeforeEnter>
       {showModal && (
         <motion.div
-          onClick={() => setShowModal(false)}
           className="backdrop"
           variants={backdrop}
           animate="visible"
@@ -33,6 +32,9 @@ const Modal = ({ showModal, setShowModal, movie }) => {
           exit="hidden"
         >
           <motion.div variants={modal} className="modal">
+            <span className="close-modal" onClick={() => setShowModal(false)}>
+              X
+            </span>
             <p>{movie.id}</p>
             {/* Video Container */}
             {/* --------------------- */}
