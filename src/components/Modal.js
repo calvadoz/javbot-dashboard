@@ -41,10 +41,14 @@ const Modal = ({ showModal, setShowModal, movie }) => {
             {/* Genre */}
             {/* Label */}
             {/* Date Released */}
-            <div>
+            <div className="javadoz-video-container">
               {!movie.trailer && <h2>No Trailer Available</h2>}
               {movie.trailer && (
-                <video className="javadoz-video" poster={movie.thumbnail} controls>
+                <video
+                  className="javadoz-video"
+                  poster={movie.thumbnail}
+                  controls
+                >
                   <source src={movie.trailer} type="video/mp4" />
                 </video>
               )}

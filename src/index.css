@@ -140,6 +140,10 @@ body {
   border-radius: 10px;
 }
 
+.modal .javadoz-video-container {
+  text-align: center;
+}
+
 .modal .javadoz-video {
   width: clamp(10rem, 90%, 60rem);
 }
