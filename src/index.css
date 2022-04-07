@@ -5,8 +5,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body,
-* {
+body {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Roboto";
   background: #0e2634;
@@ -73,17 +72,17 @@ body,
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 .movie-details {
@@ -120,4 +119,27 @@ body,
 .spinner {
   width: 100px;
   height: 100px;
+}
+
+.backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1;
+}
+
+.modal {
+  width: clamp(10rem, 80%, 60rem);
+  height: auto;
+  margin: 0 auto;
+  padding: 20px;
+  background: #efefef;
+  border-radius: 10px;
+}
+
+.modal .javadoz-video {
+  width: clamp(10rem, 90%, 60rem);
 }

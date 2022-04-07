@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { orderBy } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "./../assets/logo.png";
+import imageNotFound from "./../assets/image-not-found.png";
+import Modal from "./Modal";
 import Spinner from "./Spinner";
 
 const Home = () => {
@@ -12,6 +14,9 @@ const Home = () => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [serverVersion, setServerVersion] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState();
+
   const fetchMovies = async () => {
     setIsLoading(true);
     try {
@@ -56,6 +61,11 @@ const Home = () => {
     searchInput.current.focus();
   };
 
+  const viewMovieDetails = (movie) => {
+    setSelectedMovie(movie);
+    setShowModal(true);
+  };
+
   const getServerVersion = useCallback(async () => {
     const serverVersionReq = await axios.get(
       process.env.REACT_APP_HEROKU_SERVER + "api/get-version"
@@ -74,13 +84,21 @@ const Home = () => {
 
   useEffect(() => {
     searchInput.current.value = "";
-    getServerVersion();
+    // getServerVersion();
     fetchMovies();
   }, []);
 
   return (
     <React.Fragment>
       <div className="main-container">
+        {selectedMovie && (
+          <Modal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            movie={selectedMovie}
+          />
+        )}
+
         <header className="header">
           <img
             src={logo}
@@ -109,6 +127,7 @@ const Home = () => {
             {!isLoading &&
               filteredMovies.map((movie, index) => (
                 <motion.div
+                  onClick={() => viewMovieDetails(movie)}
                   layout
                   whileHover={{ scale: 1.05, originX: 0, originY: 0 }}
                   initial={{ opacity: 0, x: -50, y: -50 }}
@@ -118,13 +137,13 @@ const Home = () => {
                     y: 0,
                     transition: { delay: index * 0.1 },
                   }}
-                  key={movie.id}
+                  key={movie.id + index}
                   className="movie-details"
                 >
                   <div className="movie-card">
                     <img
                       className="movie-cover"
-                      src={`data:image/png;base64, ${movie.base64thumb}`}
+                      src={movie.thumbnail ? movie.thumbnail : imageNotFound}
                       alt="cover"
                     />
                     <span className="movie-id">
