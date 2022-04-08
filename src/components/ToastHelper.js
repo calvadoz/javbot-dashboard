@@ -2,8 +2,16 @@ import { toast } from "react-toastify";
 
 const toastOptions = {
   theme: "colored",
-  position: toast.POSITION.TOP_CENTER,
+  position: toast.POSITION.TOP_RIGHT,
   pauseOnFocusLoss: false,
+  toastId: "some-id",
+};
+
+const toastOptionsInfo = {
+  theme: "colored",
+  position: toast.POSITION.TOP_RIGHT,
+  pauseOnFocusLoss: false,
+  style: { background: "#2741b3", fontFamily: 'Montserrat', fontSize: "14px"},
 };
 
 export const showError = (message) => {
@@ -11,7 +19,7 @@ export const showError = (message) => {
 };
 
 export const showInfo = (message) => {
-  toast.info(message, toastOptions);
+  toast.info(message, toastOptionsInfo);
 };
 
 export const showWarning = (message) => {

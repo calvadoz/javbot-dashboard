@@ -2,7 +2,7 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { orderBy, filter, uniqBy } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import logo from "./../assets/logo.png";
+import logo from "./../assets/logo-split-only.svg";
 import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
@@ -16,10 +16,16 @@ import {
   onValue,
   get,
   onChildAdded,
+  onChildChanged,
   orderByKey,
   query,
+  child,
   limitToFirst,
+  startAt,
+  limitToLast,
 } from "firebase/database";
+import { ToastContainer } from "react-toastify";
+import { showInfo } from "./ToastHelper";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -36,7 +42,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = getDatabase();
 const javMoviesR18 = query(ref(db, "jav-movies-r18"));
-
+const javMoviesR18Last = query(ref(db, "jav-movies-r18"), limitToLast(1));
 const Home = () => {
   const searchInput = useRef();
   const [allMovies, setAllMovies] = useState([]);
@@ -151,10 +157,21 @@ const Home = () => {
     onChildAdded(javMoviesR18, (snapshot, prevChildKey) => {
       if (snapshot.exists()) {
         const newMovie = snapshot.val();
+
         if (newMovie.thumbnail) {
           setAllMovies((oldArray) => [newMovie, ...oldArray]);
           setFilteredMovies((oldArray) => [newMovie, ...oldArray]);
         }
+      }
+    });
+    onChildAdded(javMoviesR18Last, (snapshot, prevChildKey) => {
+      if (snapshot.exists()) {
+        const newMovie = snapshot.val();
+        showInfo(
+          newMovie.movieId +
+            " had been requested by " +
+            newMovie.requester.split("#")[0]
+        );
       }
     });
   }, []);
@@ -162,6 +179,7 @@ const Home = () => {
   return (
     <React.Fragment>
       <div className="main-container">
+        <ToastContainer limit={2} />
         <Modal
           showModal={showModal}
           setShowModal={setShowModal}
@@ -171,9 +189,10 @@ const Home = () => {
 
         <header className="header">
           <img
+            title="Feel the Eccentric"
             src={logo}
             alt="logo"
-            style={{ width: 200, height: 200, marginTop: -40 }}
+            style={{ cursor: "pointer" }}
           />
         </header>
         <main className="main">
@@ -222,7 +241,10 @@ const Home = () => {
                         {movie.movieId} - {movie.requester.split("#")[0]}
                       </div>
                       <div className="button-container">
-                        <motion.span title="Watch Movie" className="button-icon">
+                        <motion.span
+                          title="Watch Movie"
+                          className="button-icon"
+                        >
                           <FontAwesomeIcon
                             className="watch-movie"
                             icon={["fas", "tv"]}

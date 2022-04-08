@@ -17,7 +17,7 @@ const modal = {
   visible: {
     y: "200px",
     opacity: 1,
-    transition: { delay: 0.5 },
+    transition: {delay: 0.2}
   },
 };
 

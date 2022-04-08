@@ -1,5 +1,6 @@
 @import-normalize;
 @import url("https://fonts.googleapis.com/css?family=Montserrat");
+@import "react-toastify/dist/ReactToastify.css";
 
 html {
   scroll-behavior: smooth;
@@ -8,7 +9,7 @@ html {
 body {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Roboto";
-  background: #0e2634;
+  background: #1e1e1e;
   color: rgb(219, 114, 102);
   overflow: hidden;
 }
@@ -18,12 +19,22 @@ body {
 }
 
 .header {
-  height: 100px;
+  height: 80px;
   text-align: center;
 }
 
+.header img {
+  width: 80px;
+}
+
+@media (max-width: 400px) {
+  .header {
+    display: none;
+  }
+}
+
 .main {
-  height: calc(100% - 160px);
+  height: calc(100% - 80px);
   text-align: center;
 }
 
@@ -61,7 +72,6 @@ body {
   margin: 1.25em;
   overflow: auto;
   height: calc(100% - 90px);
-  cursor: pointer;
   scrollbar-color: #6969dd #e0e0e0;
   scrollbar-width: thin;
 }
@@ -90,8 +100,9 @@ body {
 }
 
 .movie-cover {
-  width: 400px;
+  width: 430px;
   height: 300px;
+  cursor: pointer;
 }
 
 @media (max-width: 400px) {
@@ -124,7 +135,8 @@ body {
   position: relative;
   padding: clamp(4px, 0.8vw, 8px);
   font-size: clamp(14px, 0.8vw, 16px);
-  top: 7px;
+  top: 8px;
+  cursor: pointer;
 }
 
 .like-movie.liked {
@@ -198,19 +210,20 @@ body {
 }
 
 .modal .close-modal {
-  font-size: 30px;
+  font-size: 24px;
   padding: 12px;
   cursor: pointer;
   position: absolute;
-  right: 20px;
-  top: 0px;
+  right: 15px;
+  top: 10px;
 }
 
 .modal .modal-movie-id {
   font-size: 20px;
+  font-weight: 600;
   padding-bottom: 10px;
   border-bottom: 1px solid;
-  width: 95%;
+  width: 96%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
