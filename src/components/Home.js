@@ -1,11 +1,39 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { orderBy } from "lodash";
+import { orderBy, filter, uniqBy } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "./../assets/logo.png";
 import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
+
+import { initializeApp } from "firebase/app";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  get,
+  onChildAdded,
+  orderByKey,
+  query,
+  limitToFirst,
+} from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  // The value of databaseURL depends on the location of the database
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  // For Firebase JavaScript SDK v7.20.0 and later, measurementId is an optional field
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+};
+initializeApp(firebaseConfig);
+const db = getDatabase();
+const javMoviesR18 = query(ref(db, "jav-movies-r18"));
 
 const Home = () => {
   const searchInput = useRef();
@@ -16,26 +44,20 @@ const Home = () => {
   const [serverVersion, setServerVersion] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState();
+  const [isFetchingMetadata, setIsFetchingMetadata] = useState(false);
 
-  const fetchMovies = async () => {
-    setIsLoading(true);
-    try {
-      const movies = await axios.get(
-        process.env.REACT_APP_HEROKU_SERVER + "api/get-movie-details"
-      );
-      setIsLoading(false);
-      const orderedByNewestMovies = orderBy(
-        movies.data,
-        ["timestamp"],
-        ["desc"]
-      );
-      setAllMovies(orderedByNewestMovies);
-      setFilteredMovies(orderedByNewestMovies);
-    } catch (e) {
-      console.log(e);
-      setHasError(true);
-      setIsLoading(false);
+  const appendMetadata = (data) => {
+    const movies = [];
+    for (const key in data) {
+      const movie = {};
+      movie.movieId = data[key].movieId;
+      movie.requester = data[key].requester;
+      movie.timestamp = data[key].timestamp;
+      movie.thumbnail = data[key].thumbnail ? data[key].thumbnail : null;
+      movie.trailer = data[key].trailer ? data[key].trailer : null;
+      movies.push(movie);
     }
+    return movies;
   };
 
   const searchHandler = (e) => {
@@ -55,15 +77,27 @@ const Home = () => {
       return;
     }
     const filteredMovies = clonedMovies.filter((movie) =>
-      movie.id.toLowerCase().includes(searchText.trim().toLowerCase())
+      movie.movieId.toLowerCase().includes(searchText.trim().toLowerCase())
     );
     setFilteredMovies(filteredMovies);
     searchInput.current.focus();
   };
 
-  const viewMovieDetails = (movie) => {
-    setSelectedMovie(movie);
+  const viewMovieDetails = async (movie) => {
     setShowModal(true);
+    setIsFetchingMetadata(true);
+    const movieDetailsReq = await axios.get(
+      process.env.REACT_APP_HEROKU_SERVER +
+        "api/get-movie-metadata?movieId=" +
+        movie.movieId
+    );
+    const movieDetails = await movieDetailsReq.data;
+    movieDetails.trailer = movie.trailer;
+    movieDetails.thumbnail = movie.thumbnail;
+    movieDetails.requester = movie.requester;
+    movieDetails.timestamp = movie.timestamp;
+    setIsFetchingMetadata(false);
+    setSelectedMovie(movieDetails);
   };
 
   const getServerVersion = useCallback(async () => {
@@ -84,20 +118,54 @@ const Home = () => {
 
   useEffect(() => {
     searchInput.current.value = "";
-    // getServerVersion();
-    fetchMovies();
+    setIsLoading(true);
+    get(javMoviesR18)
+      .then((snapshot) => {
+        setIsLoading(false);
+        if (snapshot.exists()) {
+          const movieData = [...appendMetadata(snapshot.val())];
+          // order by timestamp recent
+          let orderedByNewestMovies = orderBy(
+            movieData,
+            ["timestamp"],
+            ["desc"]
+          );
+          orderedByNewestMovies = filter(
+            orderedByNewestMovies,
+            (movie) => movie.thumbnail
+          );
+          orderedByNewestMovies = uniqBy(orderedByNewestMovies, "movieId");
+          setAllMovies(orderedByNewestMovies);
+          setFilteredMovies(orderedByNewestMovies);
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        setHasError(true);
+        console.error(error);
+      });
+
+    onChildAdded(javMoviesR18, (snapshot, prevChildKey) => {
+      if (snapshot.exists()) {
+        const newMovie = snapshot.val();
+        if (newMovie.thumbnail) {
+          setAllMovies((oldArray) => [newMovie, ...oldArray]);
+          setFilteredMovies((oldArray) => [newMovie, ...oldArray]);
+        }
+      }
+    });
   }, []);
 
   return (
     <React.Fragment>
       <div className="main-container">
-        {selectedMovie && (
-          <Modal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            movie={selectedMovie}
-          />
-        )}
+        <Modal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          isFetchingMetadata={isFetchingMetadata}
+          movie={selectedMovie}
+        />
 
         <header className="header">
           <img
@@ -128,16 +196,16 @@ const Home = () => {
               filteredMovies.map((movie, index) => (
                 <motion.div
                   onClick={() => viewMovieDetails(movie)}
-                  layout
+                  layout="position"
                   whileHover={{ scale: 1.05, originX: 0, originY: 0 }}
                   initial={{ opacity: 0, x: -50, y: -50 }}
                   animate={{
                     opacity: 1,
                     x: 0,
                     y: 0,
-                    transition: { delay: index * 0.1 },
+                    transition: { delay: index * 0.05 },
                   }}
-                  key={movie.id + index}
+                  key={movie.movieId + index}
                   className="movie-details"
                 >
                   <div className="movie-card">
@@ -147,7 +215,7 @@ const Home = () => {
                       alt="cover"
                     />
                     <span className="movie-id">
-                      {movie.id} - {movie.requester.split("#")[0]}
+                      {movie.movieId} - {movie.requester.split("#")[0]}
                     </span>
                   </div>
                 </motion.div>

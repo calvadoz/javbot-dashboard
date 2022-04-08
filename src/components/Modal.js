@@ -20,7 +20,7 @@ const modal = {
   },
 };
 
-const Modal = ({ showModal, setShowModal, movie }) => {
+const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -35,26 +35,35 @@ const Modal = ({ showModal, setShowModal, movie }) => {
             <span className="close-modal" onClick={() => setShowModal(false)}>
               X
             </span>
-            <p>{movie.id}</p>
-            {/* Video Container */}
-            {/* --------------------- */}
-            {/* Movie Details Container */}
-            {/* Actresses */}
-            {/* Genre */}
-            {/* Label */}
-            {/* Date Released */}
-            <div className="javadoz-video-container">
-              {!movie.trailer && <h2>No Trailer Available</h2>}
-              {movie.trailer && (
-                <video
-                  className="javadoz-video"
-                  poster={movie.thumbnail}
-                  controls
-                >
-                  <source src={movie.trailer} type="video/mp4" />
-                </video>
-              )}
-            </div>
+            {isFetchingMetadata && (
+              <div className="movie-wrapper">
+                <Spinner />
+              </div>
+            )}
+            {!isFetchingMetadata && movie && (
+              <>
+                <p>{movie.movieId}</p>
+                {/* Video Container */}
+                {/* --------------------- */}
+                {/* Movie Details Container */}
+                {/* Actresses */}
+                {/* Genre */}
+                {/* Label */}
+                {/* Date Released */}
+                <div className="javadoz-video-container">
+                  {!movie.trailer && <h2>No Trailer Available</h2>}
+                  {movie.trailer && (
+                    <video
+                      className="javadoz-video"
+                      poster={movie.thumbnail}
+                      controls
+                    >
+                      <source src={movie.trailer} type="video/mp4" />
+                    </video>
+                  )}
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
