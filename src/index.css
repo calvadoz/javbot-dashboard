@@ -100,9 +100,41 @@ body {
     width: 100%;
   }
 }
+
+.action-bar {
+  display: flex;
+  margin-top: 4px;
+  font-size: 16px;
+  color: #ffffff;
+}
+.title-container {
+  padding: 0.5em;
+  font-weight: bold;
+  background-color: #2c2748;
+  background-image: linear-gradient(315deg, #2c2748 0%, #9591af 74%);
+  width: 80%;
+}
+.button-container {
+  width: 20%;
+  background-color: #312b54;
+}
+
+.button-icon {
+  display: inline;
+  position: relative;
+  padding: clamp(4px, 0.8vw, 8px);
+  font-size: clamp(14px, 0.8vw, 16px);
+  top: 7px;
+}
+
+.like-movie.liked {
+  color: #f31d42;
+}
+
 .movie-id {
   position: relative;
-  display: block;
+  display: inline-block;
+  width: calc(100% - 15px);
   background-color: #89d4cf;
   background-image: linear-gradient(315deg, #2e7097 0%, #75a5c1 74%);
   padding: 0.5em;
@@ -110,6 +142,10 @@ body {
   letter-spacing: 1px;
   font-size: 16px;
   color: #ffffff;
+}
+
+.button-icon {
+  display: inline;
 }
 
 .footer {
@@ -135,17 +171,30 @@ body {
   width: clamp(10rem, 80%, 60rem);
   height: 70%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 4px 20px;
   background: #efefef;
   border-radius: 10px;
+  position: relative;
+  top: -100px;
+  overflow-y: scroll;
 }
 
 .modal .javadoz-video-container {
   text-align: center;
 }
 
+.modal .javadoz-video-details-container {
+  height: 400px;
+  background: #ccc;
+  margin: 8px 0;
+}
+
 .modal .javadoz-video {
-  width: clamp(10rem, 90%, 60rem);
+  width: clamp(10rem, 100%, 60rem);
+  max-height: 400px;
+  border-radius: 10px;
+  background: #333;
+  cursor: pointer;
 }
 
 .modal .close-modal {
@@ -155,5 +204,14 @@ body {
   position: absolute;
   right: 20px;
   top: 0px;
+}
 
+.modal .modal-movie-id {
+  font-size: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+  width: 95%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

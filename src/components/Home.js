@@ -7,6 +7,8 @@ import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { initializeApp } from "firebase/app";
 import {
   getDatabase,
@@ -195,9 +197,8 @@ const Home = () => {
             {!isLoading &&
               filteredMovies.map((movie, index) => (
                 <motion.div
-                  onClick={() => viewMovieDetails(movie)}
                   layout="position"
-                  whileHover={{ scale: 1.05, originX: 0, originY: 0 }}
+                  // whileHover={{ scale: 1.05, originX: 0, originY: 0 }}
                   initial={{ opacity: 0, x: -50, y: -50 }}
                   animate={{
                     opacity: 1,
@@ -209,14 +210,32 @@ const Home = () => {
                   className="movie-details"
                 >
                   <div className="movie-card">
-                    <img
+                    <motion.img
+                      whileHover={{ scale: 1.02, originX: 0, originY: 0 }}
+                      onClick={() => viewMovieDetails(movie)}
                       className="movie-cover"
                       src={movie.thumbnail ? movie.thumbnail : imageNotFound}
                       alt="cover"
                     />
-                    <span className="movie-id">
-                      {movie.movieId} - {movie.requester.split("#")[0]}
-                    </span>
+                    <div className="action-bar">
+                      <div className="title-container">
+                        {movie.movieId} - {movie.requester.split("#")[0]}
+                      </div>
+                      <div className="button-container">
+                        <motion.span title="Watch Movie" className="button-icon">
+                          <FontAwesomeIcon
+                            className="watch-movie"
+                            icon={["fas", "tv"]}
+                          />
+                        </motion.span>
+                        <span title="Like Movie" className="button-icon">
+                          <FontAwesomeIcon
+                            className="like-movie liked"
+                            icon={["fas", "heart"]}
+                          />
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               ))}

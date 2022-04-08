@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import Spinner from "./Spinner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -32,9 +33,17 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
           exit="hidden"
         >
           <motion.div variants={modal} className="modal">
-            <span className="close-modal" onClick={() => setShowModal(false)}>
+            <motion.span
+              title="Close"
+              whileHover={{ scale: 1.1 }}
+              onClick={() => setShowModal(false)}
+              className="close-modal"
+            >
+              <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
+            </motion.span>
+            {/* <span className="" onClick={() => setShowModal(false)}>
               X
-            </span>
+            </span> */}
             {isFetchingMetadata && (
               <div className="movie-wrapper">
                 <Spinner />
@@ -42,14 +51,8 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
             )}
             {!isFetchingMetadata && movie && (
               <>
-                <p>{movie.movieId}</p>
+                <p className="modal-movie-id">{movie.title}</p>
                 {/* Video Container */}
-                {/* --------------------- */}
-                {/* Movie Details Container */}
-                {/* Actresses */}
-                {/* Genre */}
-                {/* Label */}
-                {/* Date Released */}
                 <div className="javadoz-video-container">
                   {!movie.trailer && <h2>No Trailer Available</h2>}
                   {movie.trailer && (
@@ -62,6 +65,13 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
                     </video>
                   )}
                 </div>
+                {/* --------------------- */}
+                {/* Movie Details Container */}
+                <div className="javadoz-video-details-container"></div>
+                {/* Actresses */}
+                {/* Genre */}
+                {/* Label */}
+                {/* Date Released */}
               </>
             )}
           </motion.div>
