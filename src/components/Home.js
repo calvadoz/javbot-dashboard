@@ -41,8 +41,8 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getDatabase();
-const javMoviesR18 = query(ref(db, "jav-movies-database"));
-const javMoviesR18Last = query(ref(db, "jav-movies-database"), limitToLast(1));
+const javMoviesR18 = query(ref(db, "jav-movies-db"));
+const javMoviesR18Last = query(ref(db, "jav-movies-db"), limitToLast(1));
 localStorage.setItem("favMovies", []);
 const Home = () => {
   const searchInput = useRef();
