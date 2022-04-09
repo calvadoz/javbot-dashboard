@@ -43,6 +43,7 @@ initializeApp(firebaseConfig);
 const db = getDatabase();
 const javMoviesR18 = query(ref(db, "jav-movies-r18"));
 const javMoviesR18Last = query(ref(db, "jav-movies-r18"), limitToLast(1));
+localStorage.setItem("favMovies", []);
 const Home = () => {
   const searchInput = useRef();
   const [allMovies, setAllMovies] = useState([]);
@@ -248,9 +249,10 @@ const Home = () => {
                           title="Watch Movie"
                           className="button-icon"
                         >
+                          <span style={{marginRight: 8}}>0</span>
                           <FontAwesomeIcon
                             className="watch-movie"
-                            icon={["fas", "tv"]}
+                            icon={["fas", "eye"]}
                           />
                         </motion.span>
                         <span title="Like Movie" className="button-icon">

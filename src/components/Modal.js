@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
 import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
@@ -25,6 +24,7 @@ const modal = {
 dayjs.extend(relativeTime);
 
 const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
+  console.log(movie);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -105,11 +105,19 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
                   </div>
 
                   {/* Duration */}
-                  <div className="javadoz-video-details-categories">
-                    <p className="javadoz-video-details-label">Duration:</p>
-                    <p className="javadoz-video-details-text">
-                      {movie.length.replace("min", " minutes")}
-                    </p>
+                  <div className="javadoz-video-details-categories with-close">
+                    <div style={{ width: "100%" }}>
+                      <p className="javadoz-video-details-label">Duration:</p>
+                      <p className="javadoz-video-details-text">
+                        {movie.length.replace("min", " minutes")}
+                      </p>
+                    </div>
+                    <div
+                      onClick={() => setShowModal(false)}
+                      className="close-modal-bottom"
+                    >
+                      <span>Close</span>
+                    </div>
                   </div>
                 </div>
               </>
