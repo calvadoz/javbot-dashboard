@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -17,9 +19,10 @@ const modal = {
   visible: {
     y: "200px",
     opacity: 1,
-    transition: {delay: 0.2}
+    transition: { delay: 0.2 },
   },
 };
+dayjs.extend(relativeTime);
 
 const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
   return (
@@ -41,9 +44,7 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
             >
               <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
             </motion.span>
-            {/* <span className="" onClick={() => setShowModal(false)}>
-              X
-            </span> */}
+
             {isFetchingMetadata && (
               <div className="movie-wrapper">
                 <Spinner />
@@ -51,7 +52,15 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
             )}
             {!isFetchingMetadata && movie && (
               <>
-                <p className="modal-movie-id">{movie.title}</p>
+                <p className="modal-movie-id">
+                  {movie.movieId} -{" "}
+                  <span
+                    style={{ fontSize: "80%", fontWeight: "normal" }}
+                    title={movie.releaseDate}
+                  >
+                    {dayjs().to(dayjs(movie.releaseDate))}
+                  </span>
+                </p>
                 {/* Video Container */}
                 <div className="javadoz-video-container">
                   {!movie.trailer && <h2>No Trailer Available</h2>}
@@ -67,11 +76,42 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
                 </div>
                 {/* --------------------- */}
                 {/* Movie Details Container */}
-                <div className="javadoz-video-details-container"></div>
-                {/* Actresses */}
-                {/* Genre */}
-                {/* Label */}
-                {/* Date Released */}
+                <div className="javadoz-video-details-container">
+                  {/* Title */}
+                  <div className="javadoz-video-details-categories">
+                    <p className="javadoz-video-details-label">Title</p>
+                    <p className="javadoz-video-details-text">{movie.title}</p>
+                  </div>
+                  {/* Actresses */}
+                  <div className="javadoz-video-details-categories">
+                    <p className="javadoz-video-details-label">
+                      {movie.actresses.length > 1 ? "Casts" : "Cast"}
+                    </p>
+                    <p className="javadoz-video-details-text">
+                      {movie.actresses ? movie.actresses : "N/A"}
+                    </p>
+                  </div>
+                  {/* Genre */}
+                  <div className="javadoz-video-details-categories">
+                    <p className="javadoz-video-details-label">Genre:</p>
+                    <p className="javadoz-video-details-text">
+                      {movie.genre ? movie.genre.join(", ") : "N/A"}
+                    </p>
+                  </div>
+                  {/* Label */}
+                  <div className="javadoz-video-details-categories">
+                    <p className="javadoz-video-details-label">Studio:</p>
+                    <p className="javadoz-video-details-text">{movie.studio}</p>
+                  </div>
+
+                  {/* Duration */}
+                  <div className="javadoz-video-details-categories">
+                    <p className="javadoz-video-details-label">Duration:</p>
+                    <p className="javadoz-video-details-text">
+                      {movie.length.replace("min", " minutes")}
+                    </p>
+                  </div>
+                </div>
               </>
             )}
           </motion.div>

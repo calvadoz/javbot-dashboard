@@ -164,14 +164,17 @@ const Home = () => {
         }
       }
     });
-    onChildAdded(javMoviesR18Last, (snapshot, prevChildKey) => {
+    onChildAdded(javMoviesR18Last, (snapshot) => {
       if (snapshot.exists()) {
         const newMovie = snapshot.val();
-        showInfo(
-          newMovie.movieId +
-            " had been requested by " +
-            newMovie.requester.split("#")[0]
+        const renderElement = (
+          <div>
+            Latest Movie: <b>{newMovie.movieId}</b>
+            <br />
+            Requested by: <b>{newMovie.requester.split("#")[0]}</b>
+          </div>
         );
+        showInfo(renderElement);
       }
     });
   }, []);
