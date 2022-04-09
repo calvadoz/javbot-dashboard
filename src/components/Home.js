@@ -13,16 +13,16 @@ import { initializeApp } from "firebase/app";
 import {
   getDatabase,
   ref,
-  onValue,
   get,
   onChildAdded,
-  onChildChanged,
-  orderByKey,
   query,
   child,
+  equalTo,
   limitToFirst,
-  startAt,
   limitToLast,
+  set,
+  update,
+  onChildChanged,
 } from "firebase/database";
 import { ToastContainer } from "react-toastify";
 import { showInfo } from "./ToastHelper";
@@ -40,9 +40,11 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 initializeApp(firebaseConfig);
+const dbRef = ref(getDatabase());
 const db = getDatabase();
 const javMoviesR18 = query(ref(db, "jav-movies-db"));
 const javMoviesR18Last = query(ref(db, "jav-movies-db"), limitToLast(1));
+
 localStorage.setItem("favMovies", []);
 const Home = () => {
   const searchInput = useRef();
@@ -59,6 +61,7 @@ const Home = () => {
     const movies = [];
     for (const key in data) {
       const movie = {};
+      movie.firebaseId = key;
       movie.guid = data[key].guid;
       movie.movieId = data[key].movieId;
       movie.requester = data[key].requester;
@@ -109,6 +112,7 @@ const Home = () => {
     movieDetails.timestamp = movie.timestamp;
     movieDetails.watchCount = movie.watchCount;
     movieDetails.guid = movie.guid;
+    updateWatchCount(movie);
     setIsFetchingMetadata(false);
     setSelectedMovie(movieDetails);
   };
@@ -128,6 +132,25 @@ const Home = () => {
           );
     setServerVersion(sVersion);
   }, []);
+
+  const updateWatchCount = (movie) => {
+    get(child(dbRef, `jav-movies-db/${movie.firebaseId}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const updatedData = { ...snapshot.val() };
+          updatedData.watchCount++;
+          update(
+            child(dbRef, `jav-movies-db/${movie.firebaseId}`),
+            updatedData
+          );
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
     searchInput.current.value = "";
@@ -180,6 +203,24 @@ const Home = () => {
           </div>
         );
         showInfo(renderElement);
+      }
+    });
+    onChildChanged(javMoviesR18, (snapshot, prevChildKey) => {
+      if (snapshot.exists()) {
+        // console.log("Child Changed: ", snapshot.val());
+        const newMovie = snapshot.val();
+        setAllMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === newMovie.guid
+          ).watchCount = newMovie.watchCount;
+          return [...oldArray];
+        });
+        setFilteredMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === newMovie.guid
+          ).watchCount = newMovie.watchCount;
+          return [...oldArray];
+        });
       }
     });
   }, []);
@@ -253,7 +294,9 @@ const Home = () => {
                           title="Watch Movie"
                           className="button-icon"
                         >
-                          <span style={{marginRight: 8}}>{movie.watchCount}</span>
+                          <span style={{ marginRight: 8 }}>
+                            {movie.watchCount}
+                          </span>
                           <FontAwesomeIcon
                             className="watch-movie"
                             icon={["fas", "eye"]}
