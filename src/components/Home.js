@@ -41,8 +41,8 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getDatabase();
-const javMoviesR18 = query(ref(db, "jav-movies-r18"));
-const javMoviesR18Last = query(ref(db, "jav-movies-r18"), limitToLast(1));
+const javMoviesR18 = query(ref(db, "jav-movies-database"));
+const javMoviesR18Last = query(ref(db, "jav-movies-database"), limitToLast(1));
 localStorage.setItem("favMovies", []);
 const Home = () => {
   const searchInput = useRef();
@@ -59,11 +59,13 @@ const Home = () => {
     const movies = [];
     for (const key in data) {
       const movie = {};
+      movie.guid = data[key].guid;
       movie.movieId = data[key].movieId;
       movie.requester = data[key].requester;
       movie.timestamp = data[key].timestamp;
       movie.thumbnail = data[key].thumbnail ? data[key].thumbnail : null;
       movie.trailer = data[key].trailer ? data[key].trailer : null;
+      movie.watchCount = data[key].watchCount;
       movies.push(movie);
     }
     return movies;
@@ -249,7 +251,7 @@ const Home = () => {
                           title="Watch Movie"
                           className="button-icon"
                         >
-                          <span style={{marginRight: 8}}>0</span>
+                          <span style={{marginRight: 8}}>{movie.watchCount}</span>
                           <FontAwesomeIcon
                             className="watch-movie"
                             icon={["fas", "eye"]}
