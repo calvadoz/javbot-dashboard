@@ -107,6 +107,8 @@ const Home = () => {
     movieDetails.thumbnail = movie.thumbnail;
     movieDetails.requester = movie.requester;
     movieDetails.timestamp = movie.timestamp;
+    movieDetails.watchCount = movie.watchCount;
+    movieDetails.guid = movie.guid;
     setIsFetchingMetadata(false);
     setSelectedMovie(movieDetails);
   };

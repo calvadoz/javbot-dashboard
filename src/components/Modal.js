@@ -4,6 +4,7 @@ import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Link } from "react-router-dom";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -24,7 +25,6 @@ const modal = {
 dayjs.extend(relativeTime);
 
 const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
-  console.log(movie);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -73,6 +73,19 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
                       <source src={movie.trailer} type="video/mp4" />
                     </video>
                   )}
+                </div>
+                <div className="play-full-movie-container">
+                  <button
+                    onClick={() => window.open(movie.fullMovieUrl, "_blank")}
+                    className="play-full-movie-button"
+                    disabled={!movie.fullMovieUrl}
+                  >
+                    <FontAwesomeIcon
+                      className="play-icon"
+                      icon={["fas", "circle-play"]}
+                    />
+                    Play Full Movie
+                  </button>
                 </div>
                 {/* --------------------- */}
                 {/* Movie Details Container */}

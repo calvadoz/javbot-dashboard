@@ -67,6 +67,7 @@ body {
 .movie-wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   padding: 5px;
   margin: 1.25em;
@@ -207,7 +208,7 @@ body {
 .modal .javadoz-video-details-container {
   height: auto;
   background: transparent;
-  margin: 8px 0;
+  margin: 12px 0;
   padding: 1px 8px;
 }
 
@@ -278,4 +279,33 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.play-full-movie-container {
+  text-align: center;
+}
+
+.play-full-movie-container .play-icon {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+.play-full-movie-container .play-full-movie-button {
+  width: 100%;
+  border: none;
+  background: #db7266;
+  padding: 0.75em;
+  color: white;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 250ms ease;
+}
+
+.play-full-movie-button:disabled {
+  background: #b1b1b1;
+}
+
+.play-full-movie-button:hover:not(:disabled) {
+  background: #ab4f58;
 }
