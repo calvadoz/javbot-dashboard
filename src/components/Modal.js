@@ -53,7 +53,7 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
             {!isFetchingMetadata && movie && (
               <>
                 <p className="modal-movie-id">
-                  {movie.movieId} -{" "}
+                  {movie.id} -{" "}
                   <span
                     style={{ fontSize: "80%", fontWeight: "normal" }}
                     title={movie.releaseDate}
@@ -101,14 +101,18 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
                       {movie.actresses.length > 1 ? "Casts" : "Cast"}
                     </p>
                     <p className="javadoz-video-details-text">
-                      {movie.actresses ? movie.actresses : "N/A"}
+                      {movie.actresses.length > 0 &&
+                        movie.actresses
+                          .map((actress) => actress.name)
+                          .join(", ")}
+                      {movie.actresses.length === 0 && <span>N/A</span>}
                     </p>
                   </div>
                   {/* Genre */}
                   <div className="javadoz-video-details-categories">
                     <p className="javadoz-video-details-label">Genre:</p>
                     <p className="javadoz-video-details-text">
-                      {movie.genre ? movie.genre.join(", ") : "N/A"}
+                      {movie.genres ? movie.genres.join(", ") : "N/A"}
                     </p>
                   </div>
                   {/* Label */}

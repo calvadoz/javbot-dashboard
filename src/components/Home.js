@@ -203,11 +203,24 @@ const Home = () => {
           </div>
         );
         showInfo(renderElement);
+        if (newMovie.trailer) {
+          setAllMovies((oldArray) => {
+            oldArray.find(
+              (oldRecord) => oldRecord.guid === newMovie.guid
+            ).firebaseId = snapshot.key;
+            return [...oldArray];
+          });
+          setFilteredMovies((oldArray) => {
+            oldArray.find(
+              (oldRecord) => oldRecord.guid === newMovie.guid
+            ).firebaseId = snapshot.key;
+            return [...oldArray];
+          });
+        }
       }
     });
     onChildChanged(javMoviesR18, (snapshot, prevChildKey) => {
       if (snapshot.exists()) {
-        // console.log("Child Changed: ", snapshot.val());
         const newMovie = snapshot.val();
         setAllMovies((oldArray) => {
           oldArray.find(
