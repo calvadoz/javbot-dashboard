@@ -38,6 +38,23 @@ body {
   text-align: center;
 }
 
+.header-button {
+  border: none;
+  width: 40px;
+  height: 40px;
+  color: white;
+  background: #ab4f58;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  top: 12px;
+  margin-right: 8px;
+}
+
+.header-button span {
+  font-size: 18px;
+}
+
 .search-text {
   height: 20px;
   width: 400px;

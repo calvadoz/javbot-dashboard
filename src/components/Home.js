@@ -153,7 +153,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    searchInput.current.value = "";
+    // searchInput.current.value = "";
     setIsLoading(true);
     get(javMoviesR18)
       .then((snapshot) => {
@@ -202,8 +202,8 @@ const Home = () => {
             Requested by: <b>{newMovie.requester.split("#")[0]}</b>
           </div>
         );
-        showInfo(renderElement);
         if (newMovie.trailer) {
+          showInfo(renderElement);
           setAllMovies((oldArray) => {
             oldArray.find(
               (oldRecord) => oldRecord.guid === newMovie.guid
@@ -238,6 +238,18 @@ const Home = () => {
     });
   }, []);
 
+  const filterHandler = () => {
+    alert("To be implemented");
+  };
+
+  const sortHandler = () => {
+    alert("To be implemented");
+  };
+
+  const watchListHandler = () => {
+    alert("To be implemented");
+  };
+
   return (
     <React.Fragment>
       <div className="main-container">
@@ -248,7 +260,6 @@ const Home = () => {
           isFetchingMetadata={isFetchingMetadata}
           movie={selectedMovie}
         />
-
         <header className="header">
           <img
             title="Feel the Eccentric"
@@ -259,15 +270,57 @@ const Home = () => {
         </header>
         <main className="main">
           <div className="input-wrapper">
-            <input
+            <motion.input
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               autoFocus
               placeholder="Movie Code"
               className="search-text"
               onKeyDown={searchHandler}
-              onBlur={blurSearchHandler}
+              onBlur={searchHandler}
               ref={searchInput}
             />
           </div>
+          <div className="header-action-button">
+            {" "}
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              title="Filter Results"
+              className="header-button"
+              onClick={() => filterHandler()}
+            >
+              <span>
+                <FontAwesomeIcon
+                  className="filter-icon"
+                  icon={["fas", "filter"]}
+                />
+              </span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              title="Sort Results"
+              className="header-button"
+              onClick={() => sortHandler()}
+            >
+              <span>
+                <FontAwesomeIcon
+                  className="sort-icon"
+                  icon={["fas", "arrow-down-a-z"]}
+                />
+              </span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              title="Watch List"
+              className="header-button"
+              onClick={() => watchListHandler()}
+            >
+              <span>
+                <FontAwesomeIcon className="sort-icon" icon={["fas", "tv"]} />
+              </span>
+            </motion.button>
+          </div>
+
           <div className="movie-wrapper">
             {isLoading && <Spinner />}
             {!isLoading && hasError && (
