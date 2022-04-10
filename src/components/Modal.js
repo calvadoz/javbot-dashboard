@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Link } from "react-router-dom";
+import MovieDetails from "./MovieDetails";
+import Trailers from "./Trailers";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -25,6 +27,25 @@ const modal = {
 dayjs.extend(relativeTime);
 
 const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
+  const [trailers, setTrailers] = useState([]);
+  const [isFetchingActress, setIsFetchingActress] = useState(false);
+  const [selectedActress, setSelectedActress] = useState();
+  const showTrailerHandler = (actress) => {
+    setIsFetchingActress(true);
+    setTimeout(() => {
+      console.log(actress);
+      setSelectedActress(actress);
+      setIsFetchingActress(false);
+      setTrailers(["1"]);
+    }, 1000);
+  };
+  const onBackButtonhandler = () => {
+    setTrailers([]);
+  };
+
+  useEffect(() => {
+    setTrailers([]);
+  }, []);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -45,100 +66,55 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
               <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
             </motion.span>
 
+            {/* Movie Details */}
             {isFetchingMetadata && (
               <div className="movie-wrapper">
                 <Spinner />
               </div>
             )}
-            {!isFetchingMetadata && movie && (
-              <>
-                <p className="modal-movie-id">
-                  {movie.id} -{" "}
-                  <span
-                    style={{ fontSize: "80%", fontWeight: "normal" }}
-                    title={movie.releaseDate}
+            <AnimatePresence exitBeforeEnter>
+              {!isFetchingMetadata &&
+                movie &&
+                !isFetchingActress &&
+                trailers.length === 0 && (
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      x: "100vw",
+                      transition: { duration: 0.4 },
+                    }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{
+                      opacity: 0,
+                      x: "-100vw",
+                      transition: { duration: 0.4 },
+                    }}
                   >
-                    {dayjs().to(dayjs(movie.releaseDate))}
-                  </span>
-                </p>
-                {/* Video Container */}
-                <div className="javadoz-video-container">
-                  {!movie.trailer && <h2>No Trailer Available</h2>}
-                  {movie.trailer && (
-                    <video
-                      className="javadoz-video"
-                      poster={movie.thumbnail}
-                      controls
-                    >
-                      <source src={movie.trailer} type="video/mp4" />
-                    </video>
-                  )}
-                </div>
-                <div className="play-full-movie-container">
-                  <button
-                    onClick={() => window.open(movie.fullMovieUrl, "_blank")}
-                    className="play-full-movie-button"
-                    disabled={!movie.fullMovieUrl}
-                  >
-                    <FontAwesomeIcon
-                      className="play-icon"
-                      icon={["fas", "circle-play"]}
+                    <MovieDetails
+                      movie={movie}
+                      onShowTrailer={showTrailerHandler}
+                      setShowModal={() => setShowModal(false)}
                     />
-                    Play Full Movie
-                  </button>
-                </div>
-                {/* --------------------- */}
-                {/* Movie Details Container */}
-                <div className="javadoz-video-details-container">
-                  {/* Title */}
-                  <div className="javadoz-video-details-categories">
-                    <p className="javadoz-video-details-label">Title</p>
-                    <p className="javadoz-video-details-text">{movie.title}</p>
-                  </div>
-                  {/* Actresses */}
-                  <div className="javadoz-video-details-categories">
-                    <p className="javadoz-video-details-label">
-                      {movie.actresses.length > 1 ? "Casts" : "Cast"}
-                    </p>
-                    <p className="javadoz-video-details-text">
-                      {movie.actresses.length > 0 &&
-                        movie.actresses
-                          .map((actress) => actress.name)
-                          .join(", ")}
-                      {movie.actresses.length === 0 && <span>N/A</span>}
-                    </p>
-                  </div>
-                  {/* Genre */}
-                  <div className="javadoz-video-details-categories">
-                    <p className="javadoz-video-details-label">Genre:</p>
-                    <p className="javadoz-video-details-text">
-                      {movie.genres ? movie.genres.join(", ") : "N/A"}
-                    </p>
-                  </div>
-                  {/* Label */}
-                  <div className="javadoz-video-details-categories">
-                    <p className="javadoz-video-details-label">Studio:</p>
-                    <p className="javadoz-video-details-text">{movie.studio}</p>
-                  </div>
+                  </motion.div>
+                )}
+            </AnimatePresence>
 
-                  {/* Duration */}
-                  <div className="javadoz-video-details-categories with-close">
-                    <div style={{ width: "100%" }}>
-                      <p className="javadoz-video-details-label">Duration:</p>
-                      <p className="javadoz-video-details-text">
-                        {movie.length.replace("min", " minutes")}
-                      </p>
-                    </div>
-                    <div
-                      onClick={() => setShowModal(false)}
-                      className="close-modal-bottom"
-                    >
-                      <span>Close</span>
-                    </div>
-                  </div>
-                </div>
-              </>
+            {/* Actress Trailer Section */}
+            {isFetchingActress && trailers.length === 0 && (
+              <div className="movie-wrapper">
+                <Spinner />
+              </div>
             )}
+            <AnimatePresence exitBeforeEnter>
+              {!isFetchingActress && trailers.length > 0 && (
+                <div className="trailer-wrapper">
+                  <Trailers
+                    onBackButton={onBackButtonhandler}
+                    actress={selectedActress}
+                  />
+                </div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.div>
       )}
