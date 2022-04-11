@@ -2,15 +2,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
+import { escapeRegExp } from "lodash";
 import React, { useState, useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 
+const regExp = /\(([^)]+)\)/;
 const Trailers = ({ actress, onBackButton, onMovieSelectedButton }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [actressDetails, setActressDetails] = useState({});
 
   const fetchActressDetails = useCallback(async () => {
-    let name = actress.name.toLowerCase().split(" ").join("-");
+    let name = actress.name.includes("(")
+      ? actress.name.match(regExp)[1].toLowerCase().split(" ").join("-")
+      : actress.name.toLowerCase().split(" ").join("-");
     let url = encodeURIComponent(actress.actressUrl);
     const actressDetailsReq = await axios.get(
       process.env.REACT_APP_HEROKU_SERVER +
