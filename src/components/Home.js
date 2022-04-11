@@ -105,21 +105,7 @@ const Home = () => {
 
   const viewMovieDetails = async (movie) => {
     setShowModal(true);
-    // setIsFetchingMetadata(true);
-    // const movieDetailsReq = await axios.get(
-    //   process.env.REACT_APP_HEROKU_SERVER +
-    //     "api/get-movie-metadata?movieId=" +
-    //     movie.movieId
-    // );
-    // const movieDetails = await movieDetailsReq.data;
-    // movieDetails.trailer = movie.trailer;
-    // movieDetails.thumbnail = movie.thumbnail;
-    // movieDetails.requester = movie.requester;
-    // movieDetails.timestamp = movie.timestamp;
-    // movieDetails.watchCount = movie.watchCount;
-    // movieDetails.guid = movie.guid;
     updateWatchCount(movie);
-    // setIsFetchingMetadata(false);
     setSelectedMovie(movie);
   };
 
