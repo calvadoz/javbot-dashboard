@@ -1,6 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
   return (
@@ -23,7 +22,7 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
           </video>
         )}
       </div>
-      <div className="play-full-movie-container">
+      {/* <div className="play-full-movie-container">
         <button
           onClick={() => window.open(movie.fullMovieUrl, "_blank")}
           className="play-full-movie-button"
@@ -35,7 +34,7 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
           />
           Play Full Movie
         </button>
-      </div>
+      </div> */}
       {/* --------------------- */}
       {/* Movie Details Container */}
       <div className="javadoz-video-details-container">
@@ -100,10 +99,7 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
               {movie.length.replace("min", " minutes")}
             </p>
           </div>
-          <div
-            onClick={setShowModal}
-            className="close-modal-bottom"
-          >
+          <div onClick={setShowModal} className="close-modal-bottom">
             <span>Close</span>
           </div>
         </div>

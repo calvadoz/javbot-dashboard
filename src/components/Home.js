@@ -263,7 +263,7 @@ const Home = () => {
             <motion.input
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              autoFocus
+              // autoFocus
               placeholder="Movie Code"
               className="search-text"
               onKeyDown={searchHandler}
