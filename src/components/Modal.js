@@ -7,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Link } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
 import Trailers from "./Trailers";
+import axios from "axios";
 
 const backdrop = {
   visible: { opacity: 1 },

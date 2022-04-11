@@ -3,10 +3,11 @@ import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 
 const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
+  console.log(movie);
   return (
     <React.Fragment>
       <p className="modal-movie-id">
-        {movie.id} -{" "}
+        {movie.movieId} -{" "}
         <span
           style={{ fontSize: "80%", fontWeight: "normal" }}
           title={movie.releaseDate}
@@ -47,10 +48,15 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
         {/* Actresses */}
         <div className="javadoz-video-details-categories">
           <p className="javadoz-video-details-label">
-            {movie.actresses.length > 1 ? "Casts" : "Cast"}
+            {movie.actresses
+              ? movie.actresses.length > 1
+                ? "Cast(s)"
+                : "Cast"
+              : "Cast"}
           </p>
           <p className="javadoz-video-details-text actresses">
-            {movie.actresses.length > 0 &&
+            {movie.actresses &&
+              movie.actresses.length > 0 &&
               movie.actresses.map((actress) => (
                 <button
                   key={actress.name}
@@ -60,7 +66,18 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
                   {actress.name}
                 </button>
               ))}
-            {movie.actresses.length === 0 && <span>N/A</span>}
+            {!movie.actresses && <span>N/A</span>}
+            {/* {movie.actresses && movie.actresses.length > 0 &&
+              movie.actresses.map((actress) => (
+                <button
+                  key={actress.name}
+                  className="actress-name-button"
+                  onClick={() => onShowTrailer(actress)}
+                >
+                  {actress.name}
+                </button>
+              ))} */}
+            {/* {movie.actresses.length === 0 && <span>N/A</span>} */}
           </p>
         </div>
         {/* Genre */}

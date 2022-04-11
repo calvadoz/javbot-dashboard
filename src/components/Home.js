@@ -42,8 +42,8 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const dbRef = ref(getDatabase());
 const db = getDatabase();
-const javMoviesR18 = query(ref(db, "jav-movies-db"));
-const javMoviesR18Last = query(ref(db, "jav-movies-db"), limitToLast(1));
+const javMoviesR18 = query(ref(db, "jav-movies-database"));
+const javMoviesR18Last = query(ref(db, "jav-movies-database"), limitToLast(1));
 
 localStorage.setItem("favMovies", []);
 const Home = () => {
@@ -69,6 +69,12 @@ const Home = () => {
       movie.thumbnail = data[key].thumbnail ? data[key].thumbnail : null;
       movie.trailer = data[key].trailer ? data[key].trailer : null;
       movie.watchCount = data[key].watchCount;
+      movie.actresses = data[key].actresses;
+      movie.genres = data[key].genres;
+      movie.studio = data[key].studio;
+      movie.title = data[key].title;
+      movie.length = data[key].length;
+      movie.releaseDate = data[key].releaseDate;
       movies.push(movie);
     }
     return movies;
@@ -99,22 +105,22 @@ const Home = () => {
 
   const viewMovieDetails = async (movie) => {
     setShowModal(true);
-    setIsFetchingMetadata(true);
-    const movieDetailsReq = await axios.get(
-      process.env.REACT_APP_HEROKU_SERVER +
-        "api/get-movie-metadata?movieId=" +
-        movie.movieId
-    );
-    const movieDetails = await movieDetailsReq.data;
-    movieDetails.trailer = movie.trailer;
-    movieDetails.thumbnail = movie.thumbnail;
-    movieDetails.requester = movie.requester;
-    movieDetails.timestamp = movie.timestamp;
-    movieDetails.watchCount = movie.watchCount;
-    movieDetails.guid = movie.guid;
+    // setIsFetchingMetadata(true);
+    // const movieDetailsReq = await axios.get(
+    //   process.env.REACT_APP_HEROKU_SERVER +
+    //     "api/get-movie-metadata?movieId=" +
+    //     movie.movieId
+    // );
+    // const movieDetails = await movieDetailsReq.data;
+    // movieDetails.trailer = movie.trailer;
+    // movieDetails.thumbnail = movie.thumbnail;
+    // movieDetails.requester = movie.requester;
+    // movieDetails.timestamp = movie.timestamp;
+    // movieDetails.watchCount = movie.watchCount;
+    // movieDetails.guid = movie.guid;
     updateWatchCount(movie);
-    setIsFetchingMetadata(false);
-    setSelectedMovie(movieDetails);
+    // setIsFetchingMetadata(false);
+    setSelectedMovie(movie);
   };
 
   const getServerVersion = useCallback(async () => {
@@ -134,13 +140,13 @@ const Home = () => {
   }, []);
 
   const updateWatchCount = (movie) => {
-    get(child(dbRef, `jav-movies-db/${movie.firebaseId}`))
+    get(child(dbRef, `jav-movies-database/${movie.firebaseId}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           const updatedData = { ...snapshot.val() };
           updatedData.watchCount++;
           update(
-            child(dbRef, `jav-movies-db/${movie.firebaseId}`),
+            child(dbRef, `jav-movies-database/${movie.firebaseId}`),
             updatedData
           );
         } else {

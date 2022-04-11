@@ -293,6 +293,7 @@ body {
   justify-content: center;
   border-radius: 50%;
   cursor: pointer;
+  z-index: 3;
 }
 
 .modal .modal-movie-id {
