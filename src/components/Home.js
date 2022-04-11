@@ -55,7 +55,6 @@ const Home = () => {
   const [serverVersion, setServerVersion] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState();
-  const [isFetchingMetadata, setIsFetchingMetadata] = useState(false);
 
   const appendMetadata = (data) => {
     const movies = [];
@@ -249,7 +248,6 @@ const Home = () => {
         <Modal
           showModal={showModal}
           setShowModal={setShowModal}
-          isFetchingMetadata={isFetchingMetadata}
           movie={selectedMovie}
         />
         <header className="header">

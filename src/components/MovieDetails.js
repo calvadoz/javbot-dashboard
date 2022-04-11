@@ -3,11 +3,10 @@ import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 
 const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
-  console.log(movie);
   return (
     <React.Fragment>
       <p className="modal-movie-id">
-        {movie.movieId} -{" "}
+        {movie.movieId || movie.id} -{" "}
         <span
           style={{ fontSize: "80%", fontWeight: "normal" }}
           title={movie.releaseDate}
@@ -102,7 +101,7 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
             </p>
           </div>
           <div
-            onClick={() => setShowModal(false)}
+            onClick={setShowModal}
             className="close-modal-bottom"
           >
             <span>Close</span>

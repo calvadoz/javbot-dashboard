@@ -12,6 +12,7 @@ body {
   background: #1e1e1e;
   color: rgb(219, 114, 102);
   overflow: hidden;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
 }
 
 .main-container {
@@ -350,4 +351,68 @@ body {
 
 .actress-name-button:hover {
   background: #ab4f58;
+}
+
+.actress-bio {
+  display: flex;
+  gap: 0.5em;
+  border: 1px solid #b1b1b1;
+  border-radius: 10px;
+  box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
+}
+
+@media (max-width: 40rem) {
+  .actress-bio {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.actress-bio img {
+  width: clamp(10rem, 50%, 12rem);
+  margin: 1em;
+}
+
+.actress-bio .actress-label-text {
+  margin: 0;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.actress-bio .actress-bio-details-wrapper {
+  align-self: center;
+  padding: 0px 0.5em 15px 0.5em;
+}
+
+.actress-bio .actress-text {
+  font-weight: normal;
+}
+
+.recent-movies {
+  margin-top: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+}
+
+.trailer-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5em;
+
+}
+
+.movie-code {
+  display: flex;
+  font-size: 10px;
+  padding: 0.5em;
+  justify-content: center;
+  letter-spacing: 1.5px;
+  margin-top: -4px;
+  font-weight: 600;
+}
+
+.movie-thumbnail-wrapper {
+  cursor: pointer;
 }

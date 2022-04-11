@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Link } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
 import Trailers from "./Trailers";
 import axios from "axios";
@@ -22,31 +21,45 @@ const modal = {
   visible: {
     y: "200px",
     opacity: 1,
-    transition: { delay: 0.2 },
   },
 };
 dayjs.extend(relativeTime);
 
-const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
-  const [trailers, setTrailers] = useState([]);
-  const [isFetchingActress, setIsFetchingActress] = useState(false);
+const Modal = ({ showModal, setShowModal, movie }) => {
   const [selectedActress, setSelectedActress] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState({});
   const showTrailerHandler = (actress) => {
-    setIsFetchingActress(true);
-    setTimeout(() => {
-      console.log(actress);
-      setSelectedActress(actress);
-      setIsFetchingActress(false);
-      setTrailers(["1"]);
-    }, 1000);
+    setSelectedActress(actress);
   };
-  const onBackButtonhandler = () => {
-    setTrailers([]);
+  const onBackButtonHandler = () => {
+    setSelectedActress(null);
+  };
+
+  const onCloseModalHandler = () => {
+    setShowModal(false);
+    setSelectedActress(null);
+    setSelectedMovie(null);
+  };
+
+  const movieSelectedHandler = async (selectedTrailer) => {
+    setSelectedActress(null);
+    setIsLoading(true);
+    setSelectedMovie(null);
+    const trailerMovieReq = await axios.get(
+      process.env.REACT_APP_HEROKU_SERVER +
+        "api/get-movie-metadata/?movieId=" +
+        selectedTrailer
+    );
+    const trailerMovie = trailerMovieReq.data;
+    setSelectedMovie(trailerMovie);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    setTrailers([]);
-  }, []);
+    setSelectedActress(null);
+    setSelectedMovie(movie);
+  }, [movie]);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -61,56 +74,50 @@ const Modal = ({ showModal, setShowModal, movie, isFetchingMetadata }) => {
             <motion.span
               title="Close"
               whileHover={{ scale: 1.1 }}
-              onClick={() => setShowModal(false)}
+              onClick={onCloseModalHandler}
               className="close-modal"
             >
               <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
             </motion.span>
 
             {/* Movie Details */}
-            {isFetchingMetadata && (
+            {isLoading && (
               <div className="movie-wrapper">
                 <Spinner />
               </div>
             )}
             <AnimatePresence exitBeforeEnter>
-              {!isFetchingMetadata &&
-                movie &&
-                !isFetchingActress &&
-                trailers.length === 0 && (
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      x: "100vw",
-                      transition: { duration: 0.4 },
-                    }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{
-                      opacity: 0,
-                      x: "-100vw",
-                      transition: { duration: 0.4 },
-                    }}
-                  >
-                    <MovieDetails
-                      movie={movie}
-                      onShowTrailer={showTrailerHandler}
-                      setShowModal={() => setShowModal(false)}
-                    />
-                  </motion.div>
-                )}
+              {selectedMovie && !selectedActress && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: "100vw",
+                    transition: { duration: 0.4 },
+                  }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{
+                    opacity: 0,
+                    x: "-100vw",
+                    transition: { duration: 0.4 },
+                  }}
+                >
+                  <MovieDetails
+                    movie={selectedMovie}
+                    onShowTrailer={showTrailerHandler}
+                    setShowModal={onCloseModalHandler}
+                  />
+                </motion.div>
+              )}
             </AnimatePresence>
 
-            {/* Actress Trailer Section */}
-            {isFetchingActress && trailers.length === 0 && (
-              <div className="movie-wrapper">
-                <Spinner />
-              </div>
-            )}
             <AnimatePresence exitBeforeEnter>
-              {!isFetchingActress && trailers.length > 0 && (
+              {selectedActress && (
                 <div className="trailer-wrapper">
                   <Trailers
-                    onBackButton={onBackButtonhandler}
+                    onBackButton={onBackButtonHandler}
+                    onMovieSelectedButton={(trailerMovie) =>
+                      movieSelectedHandler(trailerMovie)
+                    }
                     actress={selectedActress}
                   />
                 </div>
