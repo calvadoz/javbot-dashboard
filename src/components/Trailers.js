@@ -55,7 +55,7 @@ const Trailers = ({ actress, onBackButton, onMovieSelectedButton }) => {
               <p className="actress-label-text">
                 D.O.B:{" "}
                 <span className="actress-text">
-                  {actressDetails.dob} ( {dayjs("1999-01-01").fromNow(true)}{" "}
+                  {actressDetails.dob} ( {dayjs(actressDetails.dob).fromNow(true)}{" "}
                   old)
                 </span>
               </p>
