@@ -50,6 +50,13 @@ body {
   position: relative;
   top: 12px;
   margin-right: 8px;
+  transition: all 100ms ease;
+}
+
+.header-button.genre {
+  width: auto;
+  border-radius: 10px;
+  border: none !important;
 }
 
 .header-button span {
@@ -417,14 +424,40 @@ body {
 }
 .filter-floating-menu {
   min-width: 250px;
-  height: 400px;
+  height: 500px;
   position: absolute;
-  left: -80px;
-  top: 50px;
-  border: 1px solid #b1b1b1;
-  border-radius: 10px;
+  top: 0;
+  border-radius: 15px;
   box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
   background: white;
   color: rgb(219, 114, 102);
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: overlay;
 }
+
+@media (max-width: 400px) {
+  .filter-floating-menu {
+    top: 15%;
+  }
+}
+
+button.genre {
+  cursor: pointer;
+  padding: 0.75em;
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid white;
+  background: rgb(219, 114, 102);
+  color: white;
+  transition: all 250ms ease;
+}
+
+button.genre:hover {
+  background: rgb(180, 93, 83);
+}
+button.genre.active {
+  background: rgb(141, 72, 65);
+}
+

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { orderBy, filter, uniqBy } from "lodash";
+import { orderBy, filter, uniqBy, map, uniq, includes } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "./../assets/logo-split-only.svg";
 import imageNotFound from "./../assets/image-not-found.png";
@@ -45,6 +45,7 @@ const dbRef = ref(getDatabase());
 const db = getDatabase();
 const javMoviesR18 = query(ref(db, "jav-movies-database"));
 const javMoviesR18Last = query(ref(db, "jav-movies-database"), limitToLast(1));
+let genresFIlter;
 
 localStorage.setItem("favMovies", []);
 const Home = () => {
@@ -58,6 +59,8 @@ const Home = () => {
   const [selectedMovie, setSelectedMovie] = useState();
   const [errorMsg, setErrorMsg] = useState("");
   const [showFilter, setShowFilter] = useState(false);
+  const [genresFilter, setGenresFilter] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState([]);
 
   const appendMetadata = (data) => {
     const movies = [];
@@ -200,6 +203,8 @@ const Home = () => {
         setIsLoading(false);
         if (snapshot.exists()) {
           const movieData = [...appendMetadata(snapshot.val())];
+          const favMovies = localStorage.getItem("favMovies");
+          console.log("Favorite Movies: ", favMovies);
           // order by timestamp recent
           let orderedByNewestMovies = orderBy(
             movieData,
@@ -284,7 +289,54 @@ const Home = () => {
     });
   }, []);
 
-  const filterHandler = () => {
+  const setupFilter = () => {
+    const mappedMovies = map(filteredMovies, "genres").join().split(",");
+    const uniqueGenres = uniq(mappedMovies);
+
+    const genreList = [];
+    uniqueGenres.forEach((genre) => {
+      const movieCount = filter(filteredMovies, (b) =>
+        includes(b.genres, genre)
+      ).length;
+      genreList.push({ genre, movieCount });
+    });
+
+    const filteredGenres = filter(genreList, (g) => !g.genre.includes("SALE"));
+    const orderedGenres = orderBy(
+      filteredGenres,
+      ["movieCount", "genre"],
+      ["desc", "asc"]
+    );
+    setGenresFilter(orderedGenres);
+  };
+
+  const filterHandler = (e) => {
+    e.stopPropagation();
+    setShowFilter(!showFilter);
+  };
+
+  const genreFilterClickHandler = (genre) => {
+    const isGenreExist = selectedGenre.findIndex((g) => g === genre) !== -1;
+    if (isGenreExist) {
+      const removeSelectedGenre = selectedGenre.filter((g) => g !== genre);
+      setSelectedGenre(removeSelectedGenre);
+      setFilteredMovies([...allMovies]);
+    } else {
+      // multiple filter
+      // setSelectedGenre(prevGenre => [...prevGenre, genre]); allow multiple select
+      // const test = filter(bokeps, (m) => {
+      //   for (const genre of selectedGenres) {
+      //     if (m.genres.includes(genre)) {
+      //       return true;
+      //     }
+      //   }
+      // });
+      const filteredMovieWithGenre = filter(allMovies, (movie) =>
+        movie.genres.includes(genre)
+      );
+      setFilteredMovies([...filteredMovieWithGenre]);
+      setSelectedGenre([genre]);
+    }
     setShowFilter(!showFilter);
   };
 
@@ -292,9 +344,21 @@ const Home = () => {
     alert("To be implemented");
   };
 
+  const getSelectedGenreClass = (genre) => {
+    return selectedGenre.findIndex((g) => g === genre) !== -1;
+  };
+
+  const onMainContainerClick = (e) => {
+    setShowFilter(false);
+  };
+
+  if (genresFilter.length === 0 && !isLoading) {
+    setupFilter();
+  }
+
   return (
     <React.Fragment>
-      <div className="main-container">
+      <div className="main-container" onClick={onMainContainerClick}>
         <ToastContainer limit={2} />
         <Modal
           showModal={showModal}
@@ -314,6 +378,7 @@ const Home = () => {
             <motion.input
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              autoFocus
               placeholder="Search R18"
               className="search-text"
               onKeyDown={searchHandler}
@@ -322,27 +387,23 @@ const Home = () => {
           </div>
           <div className="header-action-button">
             {" "}
-            <motion.button
+            <button
               title="Filter Results by Genre"
-              className="header-button"
-              onClick={() => filterHandler()}
+              className={`header-button ${
+                selectedGenre.length > 0 ? "genre" : ""
+              }`}
+              onClick={filterHandler}
             >
-              <span>
-                <FontAwesomeIcon
-                  className="filter-icon"
-                  icon={["fas", "filter"]}
-                />
-                {showFilter && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="filter-floating-menu"
-                  >
-                    This is floating
-                  </motion.div>
-                )}
-              </span>
-            </motion.button>
+              {selectedGenre.length === 0 && (
+                <span>
+                  <FontAwesomeIcon
+                    className="filter-icon"
+                    icon={["fas", "filter"]}
+                  />
+                </span>
+              )}
+              {selectedGenre.length > 0 && selectedGenre.toString()}
+            </button>
             <motion.button
               title="Watch List"
               className="header-button"
@@ -360,6 +421,27 @@ const Home = () => {
           <div className="movie-wrapper">
             {isLoading && <Spinner />}
             {!isLoading && hasError && <h2>{errorMsg}</h2>}
+            {showFilter && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="filter-floating-menu"
+              >
+                {genresFilter.map((genre) => (
+                  <button
+                    key={genre.genre}
+                    onClick={() => genreFilterClickHandler(genre.genre)}
+                    className={
+                      getSelectedGenreClass(genre.genre)
+                        ? "genre active"
+                        : "genre"
+                    }
+                  >
+                    {genre.genre} ( {genre.movieCount} )
+                  </button>
+                ))}
+              </motion.div>
+            )}
             {!isLoading &&
               filteredMovies.map((movie, index) => (
                 <motion.div
