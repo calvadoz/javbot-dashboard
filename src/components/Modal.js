@@ -56,7 +56,6 @@ const Modal = ({ showModal, setShowModal, movie }) => {
   };
 
   useEffect(() => {
-    console.log("Selected Movie: ", movie);
     setSelectedActress(null);
     setSelectedMovie(movie);
   }, [movie]);

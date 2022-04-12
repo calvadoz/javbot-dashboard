@@ -151,7 +151,6 @@ const Home = () => {
   };
 
   const viewMovieDetails = async (movie) => {
-    console.log(movie);
     if (movie.firebaseId) {
       updateWatchCount(movie);
     }
@@ -195,9 +194,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    searchInput.current.value = "";
-    console.log("Inside Use Effect");
-    // searchInput.current.value = "";
     setIsLoading(true);
     get(javMoviesR18)
       .then((snapshot) => {
@@ -318,7 +314,6 @@ const Home = () => {
             <motion.input
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              // autoFocus
               placeholder="Search R18"
               className="search-text"
               onKeyDown={searchHandler}
