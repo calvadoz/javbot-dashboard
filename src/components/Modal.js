@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import MovieDetails from "./MovieDetails";
 import Trailers from "./Trailers";
 import axios from "axios";
-import { showError } from './ToastHelper';
+import { showError } from "./ToastHelper";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -26,7 +26,7 @@ const modal = {
 };
 dayjs.extend(relativeTime);
 
-const Modal = ({ showModal, setShowModal, movie }) => {
+const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
   const [selectedActress, setSelectedActress] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(movie);
@@ -93,6 +93,7 @@ const Modal = ({ showModal, setShowModal, movie }) => {
                 <Spinner />
               </div>
             )}
+            {/*  Movie Details  */}
             <AnimatePresence exitBeforeEnter>
               {selectedMovie && !selectedActress && (
                 <motion.div
@@ -116,7 +117,7 @@ const Modal = ({ showModal, setShowModal, movie }) => {
                 </motion.div>
               )}
             </AnimatePresence>
-
+            {/* Trailers */}
             <AnimatePresence exitBeforeEnter>
               {selectedActress && (
                 <div className="trailer-wrapper">
@@ -127,6 +128,31 @@ const Modal = ({ showModal, setShowModal, movie }) => {
                     }
                     actress={selectedActress}
                   />
+                </div>
+              )}
+            </AnimatePresence>
+
+            {/* Liked Movies */}
+            <AnimatePresence exitBeforeEnter>
+              {likedMovies && likedMovies.length > 0 && (
+                <div className="liked-movies-wrapper">
+                  <h2
+                    style={{ borderBottom: "1px solid", paddingBottom: ".5em" }}
+                  >
+                    Liked Movies
+                  </h2>
+                  <div className="liked-movie-thumbnail-wrapper">
+                    {likedMovies.map((likedMovie) => (
+                      <div>
+                        <p>{likedMovie.movieId}</p>
+                        <motion.img
+                          whileHover={{ scale: 1.02 }}
+                          src={likedMovie.thumbnail}
+                          alt="movie-thumbnail"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </AnimatePresence>

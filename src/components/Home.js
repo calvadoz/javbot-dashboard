@@ -2,7 +2,7 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { orderBy, filter, uniqBy, map, uniq, includes } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import logo from "./../assets/logo-split-only.svg";
+import logo from "./../assets/logo-joined-only.svg";
 import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
@@ -45,9 +45,13 @@ const dbRef = ref(getDatabase());
 const db = getDatabase();
 const javMoviesR18 = query(ref(db, "jav-movies-database"));
 const javMoviesR18Last = query(ref(db, "jav-movies-database"), limitToLast(1));
-let genresFIlter;
 
-localStorage.setItem("favMovies", []);
+const favMoviesInLocalStorage = localStorage.getItem("favMovies")
+  ? JSON.parse(localStorage.getItem("favMovies"))
+  : undefined;
+if (!favMoviesInLocalStorage) {
+  localStorage.setItem("favMovies", JSON.stringify([]));
+}
 const Home = () => {
   const searchInput = useRef();
   const [allMovies, setAllMovies] = useState([]);
@@ -61,9 +65,11 @@ const Home = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [genresFilter, setGenresFilter] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState([]);
+  const [likedMovies, setLikedMovies] = useState([]);
 
   const appendMetadata = (data) => {
     const movies = [];
+    const favMovies = JSON.parse(localStorage.getItem("favMovies"));
     for (const key in data) {
       const movie = {};
       movie.firebaseId = key;
@@ -80,6 +86,16 @@ const Home = () => {
       movie.title = data[key].title;
       movie.length = data[key].length;
       movie.releaseDate = data[key].releaseDate;
+      movie.isFavorite = false;
+      if (favMovies.length > 0) {
+        if (
+          favMovies.findIndex(
+            (favMovie) => favMovie.movieId === movie.movieId
+          ) !== -1
+        ) {
+          movie.isFavorite = true;
+        }
+      }
       movies.push(movie);
     }
     return movies;
@@ -159,6 +175,7 @@ const Home = () => {
     }
     setShowModal(true);
     setSelectedMovie(movie);
+    setLikedMovies([]);
   };
 
   const getServerVersion = useCallback(async () => {
@@ -203,8 +220,7 @@ const Home = () => {
         setIsLoading(false);
         if (snapshot.exists()) {
           const movieData = [...appendMetadata(snapshot.val())];
-          const favMovies = localStorage.getItem("favMovies");
-          console.log("Favorite Movies: ", favMovies);
+
           // order by timestamp recent
           let orderedByNewestMovies = orderBy(
             movieData,
@@ -315,6 +331,50 @@ const Home = () => {
     setShowFilter(!showFilter);
   };
 
+  const likeMovieHandler = (movie) => {
+    const favMovies = localStorage.getItem("favMovies");
+    let favMoviesJSON;
+    if (favMovies) favMoviesJSON = JSON.parse(favMovies);
+
+    if (
+      favMoviesJSON.findIndex(
+        (favMovie) => favMovie.movieId === movie.movieId
+      ) === -1
+    ) {
+      favMoviesJSON.push(movie);
+      localStorage.setItem("favMovies", JSON.stringify(favMoviesJSON));
+      setAllMovies((oldArray) => {
+        oldArray.find(
+          (oldRecord) => oldRecord.guid === movie.guid
+        ).isFavorite = true;
+        return [...oldArray];
+      });
+      setFilteredMovies((oldArray) => {
+        oldArray.find(
+          (oldRecord) => oldRecord.guid === movie.guid
+        ).isFavorite = true;
+        return [...oldArray];
+      });
+    } else {
+      const favMoviesFiltered = favMoviesJSON.filter(
+        (favMovie) => favMovie.movieId !== movie.movieId
+      );
+      localStorage.setItem("favMovies", JSON.stringify(favMoviesFiltered));
+      setAllMovies((oldArray) => {
+        oldArray.find(
+          (oldRecord) => oldRecord.guid === movie.guid
+        ).isFavorite = false;
+        return [...oldArray];
+      });
+      setFilteredMovies((oldArray) => {
+        oldArray.find(
+          (oldRecord) => oldRecord.guid === movie.guid
+        ).isFavorite = false;
+        return [...oldArray];
+      });
+    }
+  };
+
   const genreFilterClickHandler = (genre) => {
     const isGenreExist = selectedGenre.findIndex((g) => g === genre) !== -1;
     if (isGenreExist) {
@@ -341,7 +401,19 @@ const Home = () => {
   };
 
   const watchListHandler = () => {
-    alert("To be implemented");
+    const localStorageFavMovies = localStorage.getItem("favMovies");
+    if (
+      !localStorageFavMovies ||
+      JSON.parse(localStorageFavMovies).length === 0
+    ) {
+      alert("Liked movie list are empty");
+      return;
+    }
+    const likedMovies = JSON.parse(localStorageFavMovies);
+    console.log(likedMovies);
+    setShowModal(true);
+    setSelectedMovie(null);
+    setLikedMovies(likedMovies);
   };
 
   const getSelectedGenreClass = (genre) => {
@@ -364,6 +436,7 @@ const Home = () => {
           showModal={showModal}
           setShowModal={setShowModal}
           movie={selectedMovie}
+          likedMovies={likedMovies}
         />
         <header className="header">
           <img
@@ -481,9 +554,15 @@ const Home = () => {
                             icon={["fas", "eye"]}
                           />
                         </motion.span>
-                        <span title="Like Movie" className="button-icon">
+                        <span
+                          title="Like Movie"
+                          className="button-icon"
+                          onClick={() => likeMovieHandler(movie)}
+                        >
                           <FontAwesomeIcon
-                            className="like-movie liked"
+                            className={`like-movie ${
+                              movie.isFavorite ? "liked" : ""
+                            }`}
                             icon={["fas", "heart"]}
                           />
                         </span>

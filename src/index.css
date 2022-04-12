@@ -44,13 +44,17 @@ body {
   width: 40px;
   height: 40px;
   color: white;
-  background: #ab4f58;
+  background: #db7266;
   border-radius: 50%;
   cursor: pointer;
   position: relative;
   top: 12px;
   margin-right: 8px;
   transition: all 100ms ease;
+}
+
+.header-button:hover {
+  background: #ab4f58;
 }
 
 .header-button.genre {
@@ -214,7 +218,7 @@ body {
   border-radius: 10px;
   position: relative;
   top: -50px;
-  overflow-y: scroll;
+  overflow-y: overlay;
   overflow-x: hidden;
 }
 
@@ -461,3 +465,20 @@ button.genre.active {
   background: rgb(141, 72, 65);
 }
 
+.modal .liked-movie-thumbnail-wrapper {
+  display: flex;
+  gap: 1.5em;
+  flex-wrap: wrap;
+  justify-content: center;
+  cursor: auto;
+  margin-bottom: 2em;
+}
+
+.modal .liked-movie-thumbnail-wrapper img {
+  width: min(400px, 450px);
+  cursor: pointer;
+}
+
+.modal .liked-movie-thumbnail-wrapper p {
+  margin: 0;
+}
