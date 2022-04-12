@@ -399,8 +399,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: .5em;
-
+  gap: 0.5em;
 }
 
 .movie-code {
@@ -415,4 +414,17 @@ body {
 
 .movie-thumbnail-wrapper {
   cursor: pointer;
+}
+.filter-floating-menu {
+  min-width: 250px;
+  height: 400px;
+  position: absolute;
+  left: -80px;
+  top: 50px;
+  border: 1px solid #b1b1b1;
+  border-radius: 10px;
+  box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
+  background: white;
+  color: rgb(219, 114, 102);
+  z-index: 1;
 }

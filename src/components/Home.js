@@ -25,7 +25,7 @@ import {
   onChildChanged,
 } from "firebase/database";
 import { ToastContainer } from "react-toastify";
-import { showInfo } from "./ToastHelper";
+import { showError, showInfo } from "./ToastHelper";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -55,6 +55,8 @@ const Home = () => {
   const [serverVersion, setServerVersion] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
 
   const appendMetadata = (data) => {
     const movies = [];
@@ -79,9 +81,47 @@ const Home = () => {
     return movies;
   };
 
-  const searchHandler = (e) => {
+  const searchHandler = async (e) => {
+    setHasError(false);
     if (e.key === "Enter") {
-      filterMovies(searchInput.current.value);
+      setIsLoading(true);
+      setFilteredMovies([]);
+      if (searchInput.current.value) {
+        try {
+          const r18MovieReq = await axios.get(
+            process.env.REACT_APP_HEROKU_SERVER +
+              "api/get-movie-metadata/?movieId=" +
+              searchInput.current.value
+          );
+          const r18Movie = await r18MovieReq.data;
+          setIsLoading(false);
+          if (!r18Movie.title) {
+            setHasError(true);
+            showError(
+              "No record found or movie does not have trailer / thumbnail"
+            );
+            setErrorMsg("Please clear search result or search again");
+            return;
+          }
+          r18Movie.requester = "R18";
+          r18Movie.watchCount = 0;
+          r18Movie.thumbnail = r18Movie.poster;
+          r18Movie.movieId = r18Movie.id;
+          delete r18Movie.poster;
+          delete r18Movie.id;
+          setFilteredMovies([r18Movie]);
+        } catch (e) {
+          setIsLoading(false);
+          setHasError(true);
+          showError(
+            "No record found or movie does not have trailer / thumbnail"
+          );
+          setErrorMsg("Please clear search result or search again");
+        }
+      } else {
+        filterMovies(searchInput.current.value);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -103,8 +143,11 @@ const Home = () => {
   };
 
   const viewMovieDetails = async (movie) => {
+    console.log(movie);
+    if (movie.firebaseId) {
+      updateWatchCount(movie);
+    }
     setShowModal(true);
-    updateWatchCount(movie);
     setSelectedMovie(movie);
   };
 
@@ -144,6 +187,8 @@ const Home = () => {
   };
 
   useEffect(() => {
+    searchInput.current.value = "";
+    console.log("Inside Use Effect");
     // searchInput.current.value = "";
     setIsLoading(true);
     get(javMoviesR18)
@@ -170,6 +215,12 @@ const Home = () => {
       })
       .catch((error) => {
         setHasError(true);
+        showError(
+          "Something went wrong, please check your internet connection..."
+        );
+        // setErrorMsg(
+        //   "Something went wrong, please check your internet connection..."
+        // );
         console.error(error);
       });
 
@@ -230,11 +281,7 @@ const Home = () => {
   }, []);
 
   const filterHandler = () => {
-    alert("To be implemented");
-  };
-
-  const sortHandler = () => {
-    alert("To be implemented");
+    setShowFilter(!showFilter);
   };
 
   const watchListHandler = () => {
@@ -264,18 +311,16 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               // autoFocus
-              placeholder="Movie Code"
+              placeholder="Search R18"
               className="search-text"
               onKeyDown={searchHandler}
-              onBlur={searchHandler}
               ref={searchInput}
             />
           </div>
           <div className="header-action-button">
             {" "}
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              title="Filter Results"
+              title="Filter Results by Genre"
               className="header-button"
               onClick={() => filterHandler()}
             >
@@ -284,40 +329,34 @@ const Home = () => {
                   className="filter-icon"
                   icon={["fas", "filter"]}
                 />
+                {showFilter && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="filter-floating-menu"
+                  >
+                    This is floating
+                  </motion.div>
+                )}
               </span>
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              title="Sort Results"
-              className="header-button"
-              onClick={() => sortHandler()}
-            >
-              <span>
-                <FontAwesomeIcon
-                  className="sort-icon"
-                  icon={["fas", "arrow-down-a-z"]}
-                />
-              </span>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
               title="Watch List"
               className="header-button"
               onClick={() => watchListHandler()}
             >
               <span>
-                <FontAwesomeIcon className="sort-icon" icon={["fas", "tv"]} />
+                <FontAwesomeIcon
+                  className="sort-icon"
+                  icon={["fas", "heart"]}
+                />
               </span>
             </motion.button>
           </div>
 
           <div className="movie-wrapper">
             {isLoading && <Spinner />}
-            {!isLoading && hasError && (
-              <h2>
-                Something went wrong, please check your internet connection...
-              </h2>
-            )}
+            {!isLoading && hasError && <h2>{errorMsg}</h2>}
             {!isLoading &&
               filteredMovies.map((movie, index) => (
                 <motion.div
@@ -335,7 +374,6 @@ const Home = () => {
                 >
                   <div className="movie-card">
                     <motion.img
-                      whileHover={{ scale: 1.02, originX: 0, originY: 0 }}
                       onClick={() => viewMovieDetails(movie)}
                       className="movie-cover"
                       src={movie.thumbnail ? movie.thumbnail : imageNotFound}
