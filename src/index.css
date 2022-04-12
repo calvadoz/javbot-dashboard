@@ -472,6 +472,7 @@ button.genre.active {
   justify-content: center;
   cursor: auto;
   margin-bottom: 2em;
+  margin-top: 1em;
 }
 
 .modal .liked-movie-thumbnail-wrapper img {
@@ -481,4 +482,12 @@ button.genre.active {
 
 .modal .liked-movie-thumbnail-wrapper p {
   margin: 0;
+}
+
+.note-wrapper {
+  border: 1px solid #b1b1b1;
+  border-radius: 10px;
+  box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
+  padding: 1em 1.5em;
+  text-align:justify
 }

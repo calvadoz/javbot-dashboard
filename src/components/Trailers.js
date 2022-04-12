@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
-import { escapeRegExp } from "lodash";
 import React, { useState, useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 

@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import React from "react";
 
@@ -21,6 +22,16 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
             <source src={movie.trailer} type="video/mp4" />
           </video>
         )}
+      </div>
+      <div className="play-full-movie-container">
+        <button
+          onClick={() => window.open(movie.fullMovieUrl, "_blank")}
+          className="play-full-movie-button"
+          disabled={!movie.fullMovieUrl}
+        >
+          <FontAwesomeIcon className="play-icon" icon={["fas", "plus"]} />
+          Add to Liked Movies
+        </button>
       </div>
       {/* <div className="play-full-movie-container">
         <button

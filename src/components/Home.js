@@ -410,7 +410,6 @@ const Home = () => {
       return;
     }
     const likedMovies = JSON.parse(localStorageFavMovies);
-    console.log(likedMovies);
     setShowModal(true);
     setSelectedMovie(null);
     setLikedMovies(likedMovies);
@@ -423,6 +422,10 @@ const Home = () => {
   const onMainContainerClick = (e) => {
     setShowFilter(false);
   };
+
+  const closeLikeMovieHandler = () => {
+    console.log("Closing liked movie");
+  }
 
   if (genresFilter.length === 0 && !isLoading) {
     setupFilter();
@@ -437,6 +440,7 @@ const Home = () => {
           setShowModal={setShowModal}
           movie={selectedMovie}
           likedMovies={likedMovies}
+          onCloseLikedMovieModal={closeLikeMovieHandler}
         />
         <header className="header">
           <img

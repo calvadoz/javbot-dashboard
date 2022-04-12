@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import MovieDetails from "./MovieDetails";
 import Trailers from "./Trailers";
 import axios from "axios";
 import { showError } from "./ToastHelper";
+import LikedMovie from "./LikedMovie";
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -26,7 +27,8 @@ const modal = {
 };
 dayjs.extend(relativeTime);
 
-const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
+const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieModal }) => {
+  const modalContainerRef = useRef();
   const [selectedActress, setSelectedActress] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(movie);
@@ -40,6 +42,7 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
   const onCloseModalHandler = () => {
     setShowModal(false);
     setSelectedActress(null);
+    onCloseLikedMovieModal();
   };
 
   const movieSelectedHandler = async (selectedTrailer) => {
@@ -58,15 +61,50 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
       setIsLoading(false);
       return;
     }
-    console.log(trailerMovie);
     setSelectedMovie(trailerMovie);
     setIsLoading(false);
+  };
+
+  const favoriteMovieSelectedHandler = async (selectedFavoriteMovie) => {
+    setSelectedActress(null);
+    setSelectedMovie(null);
+    if (selectedFavoriteMovie.trailer) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setSelectedMovie(selectedFavoriteMovie);
+      }, 500);
+      modalContainerRef.current.scrollTo({
+        top: -100,
+        behavior: "smooth",
+      });
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+      const favoriteMovieReq = await axios.get(
+        process.env.REACT_APP_HEROKU_SERVER +
+          "api/get-movie-metadata/?movieId=" +
+          selectedFavoriteMovie.movieId
+      );
+      const favoriteMovie = favoriteMovieReq.data;
+      if (!selectedFavoriteMovie.trailer) {
+        showError("No Trailer found for this movie, please refresh page");
+        setSelectedMovie(null);
+        setIsLoading(false);
+        return;
+      }
+      modalContainerRef.current.scrollTo({
+        top: -100,
+        behavior: "smooth",
+      });
+      setSelectedMovie(favoriteMovie);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     setSelectedActress(null);
     setSelectedMovie(movie);
-  }, [movie]);
+  }, [movie, likedMovies]);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
@@ -77,7 +115,11 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
           initial="hidden"
           exit="hidden"
         >
-          <motion.div variants={modal} className="modal">
+          <motion.div
+            variants={modal}
+            className="modal"
+            ref={modalContainerRef}
+          >
             <motion.span
               title="Close"
               whileHover={{ scale: 1.1 }}
@@ -134,26 +176,13 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies }) => {
 
             {/* Liked Movies */}
             <AnimatePresence exitBeforeEnter>
-              {likedMovies && likedMovies.length > 0 && (
-                <div className="liked-movies-wrapper">
-                  <h2
-                    style={{ borderBottom: "1px solid", paddingBottom: ".5em" }}
-                  >
-                    Liked Movies
-                  </h2>
-                  <div className="liked-movie-thumbnail-wrapper">
-                    {likedMovies.map((likedMovie) => (
-                      <div>
-                        <p>{likedMovie.movieId}</p>
-                        <motion.img
-                          whileHover={{ scale: 1.02 }}
-                          src={likedMovie.thumbnail}
-                          alt="movie-thumbnail"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              {likedMovies && likedMovies.length > 0 && !selectedActress && (
+                <LikedMovie
+                  likedMovies={likedMovies}
+                  onFavoriteMovieSelectedButton={(favoriteMovie) =>
+                    favoriteMovieSelectedHandler(favoriteMovie)
+                  }
+                />
               )}
             </AnimatePresence>
           </motion.div>
