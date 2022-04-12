@@ -6,7 +6,6 @@ import logo from "./../assets/logo-split-only.svg";
 import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { initializeApp } from "firebase/app";
@@ -26,6 +25,8 @@ import {
 } from "firebase/database";
 import { ToastContainer } from "react-toastify";
 import { showError, showInfo } from "./ToastHelper";
+import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -94,6 +95,7 @@ const Home = () => {
               searchInput.current.value
           );
           const r18Movie = await r18MovieReq.data;
+          const res = await axios.get("https://geolocation-db.com/json/");
           setIsLoading(false);
           if (!r18Movie.title) {
             setHasError(true);
@@ -109,7 +111,13 @@ const Home = () => {
           r18Movie.movieId = r18Movie.id;
           delete r18Movie.poster;
           delete r18Movie.id;
+          setSelectedMovie(r18Movie);
           setFilteredMovies([r18Movie]);
+          set(ref(db, "jav-movie-search/" + uuidv4()), {
+            movieId: r18Movie.movieId,
+            timestamps: new Date().toString(),
+            clientAddress: res.data.IPv4,
+          });
         } catch (e) {
           setIsLoading(false);
           setHasError(true);
