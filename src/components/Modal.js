@@ -7,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import MovieDetails from "./MovieDetails";
 import Trailers from "./Trailers";
 import axios from "axios";
+import { showError } from './ToastHelper';
 
 const backdrop = {
   visible: { opacity: 1 },
@@ -51,6 +52,13 @@ const Modal = ({ showModal, setShowModal, movie }) => {
         selectedTrailer
     );
     const trailerMovie = trailerMovieReq.data;
+    if (!trailerMovie.trailer) {
+      showError("No Trailer found for this movie, please refresh page");
+      setSelectedMovie(null);
+      setIsLoading(false);
+      return;
+    }
+    console.log(trailerMovie);
     setSelectedMovie(trailerMovie);
     setIsLoading(false);
   };
