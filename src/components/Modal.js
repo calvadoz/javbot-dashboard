@@ -28,7 +28,7 @@ dayjs.extend(relativeTime);
 const Modal = ({ showModal, setShowModal, movie }) => {
   const [selectedActress, setSelectedActress] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState({});
+  const [selectedMovie, setSelectedMovie] = useState(movie);
   const showTrailerHandler = (actress) => {
     setSelectedActress(actress);
   };
@@ -39,7 +39,6 @@ const Modal = ({ showModal, setShowModal, movie }) => {
   const onCloseModalHandler = () => {
     setShowModal(false);
     setSelectedActress(null);
-    // setSelectedMovie(null);
   };
 
   const movieSelectedHandler = async (selectedTrailer) => {
@@ -57,6 +56,7 @@ const Modal = ({ showModal, setShowModal, movie }) => {
   };
 
   useEffect(() => {
+    console.log("Selected Movie: ", movie);
     setSelectedActress(null);
     setSelectedMovie(movie);
   }, [movie]);
