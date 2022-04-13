@@ -24,9 +24,8 @@ const LikedMovie = ({ likedMovies, onFavoriteMovieSelectedButton }) => {
         {likedMovies.map((likedMovie) => (
           <div key={likedMovie.movieId}>
             <p>{likedMovie.movieId}</p>
-            <motion.img
+            <img
               onClick={() => onFavoriteMovieSelectedButton(likedMovie)}
-              whileHover={{ scale: 1.02 }}
               src={likedMovie.thumbnail}
               alt="movie-thumbnail"
             />

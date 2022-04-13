@@ -54,8 +54,8 @@ const Trailers = ({ actress, onBackButton, onMovieSelectedButton }) => {
               <p className="actress-label-text">
                 D.O.B:{" "}
                 <span className="actress-text">
-                  {actressDetails.dob} ( {dayjs(actressDetails.dob).fromNow(true)}{" "}
-                  old)
+                  {actressDetails.dob} ({" "}
+                  {dayjs(actressDetails.dob).fromNow(true)} old)
                 </span>
               </p>
               <p className="actress-label-text">
@@ -89,15 +89,14 @@ const Trailers = ({ actress, onBackButton, onMovieSelectedButton }) => {
           <div className="trailer-gallery">
             {actressDetails.trailers.length > 0 &&
               actressDetails.trailers.map((detail) => (
-                <motion.div
+                <div
                   onClick={() => onMovieSelectedButton(detail.id)}
-                  whileHover={{ scale: 1.1 }}
                   className="movie-thumbnail-wrapper"
                   key={detail.id}
                 >
                   <img src={detail.thumbnail} alt="thumbnail" />
                   <span className="movie-code">{detail.id}</span>
-                </motion.div>
+                </div>
               ))}
           </div>
         </>

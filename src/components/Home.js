@@ -531,7 +531,6 @@ const Home = () => {
               filteredMovies.map((movie, index) => (
                 <motion.div
                   layout="position"
-                  // whileHover={{ scale: 1.05, originX: 0, originY: 0 }}
                   initial={{ opacity: 0, x: -50, y: -50 }}
                   animate={{
                     opacity: 1,

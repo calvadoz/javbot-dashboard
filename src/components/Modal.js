@@ -120,14 +120,13 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieM
             className="modal"
             ref={modalContainerRef}
           >
-            <motion.span
+            <span
               title="Close"
-              whileHover={{ scale: 1.1 }}
               onClick={onCloseModalHandler}
               className="close-modal"
             >
               <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
-            </motion.span>
+            </span>
 
             {/* Movie Details */}
             {isLoading && (
