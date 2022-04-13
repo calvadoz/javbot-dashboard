@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { orderBy, filter, uniqBy, map, uniq, includes } from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import logo from "./../assets/logo-joined-only.svg";
+import logo2 from "./../assets/logo-joined-with-text.svg";
+import r18logo from "./../assets/r18logo.svg";
 import imageNotFound from "./../assets/image-not-found.png";
 import Modal from "./Modal";
 import Spinner from "./Spinner";
@@ -24,9 +26,10 @@ import {
   onChildChanged,
 } from "firebase/database";
 import { ToastContainer } from "react-toastify";
-import { showError, showInfo } from "./ToastHelper";
+import { showError, showInfo, showSuccess, showWarning } from "./ToastHelper";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
+import { backdropVariants, modalVariants } from "./Animation";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -66,6 +69,7 @@ const Home = () => {
   const [genresFilter, setGenresFilter] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState([]);
   const [likedMovies, setLikedMovies] = useState([]);
+  const [showSettings, setShowSettings] = useState(false);
 
   const appendMetadata = (data) => {
     const movies = [];
@@ -184,13 +188,6 @@ const Home = () => {
     );
     let sVersion = serverVersionReq.data;
 
-    sVersion =
-      sVersion === "development"
-        ? sVersion
-        : process.env.REACT_APP_SERVER_VERSION.replace(
-            "x",
-            sVersion.replace("v", "")
-          );
     setServerVersion(sVersion);
   }, []);
 
@@ -305,6 +302,12 @@ const Home = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const favMovies = localStorage.getItem("favMovies");
+    getServerVersion();
+    setLikedMovies(JSON.parse(favMovies));
+  }, [getServerVersion]);
+
   const setupFilter = () => {
     const mappedMovies = map(filteredMovies, "genres").join().split(",");
     const uniqueGenres = uniq(mappedMovies);
@@ -335,7 +338,6 @@ const Home = () => {
     const favMovies = localStorage.getItem("favMovies");
     let favMoviesJSON;
     if (favMovies) favMoviesJSON = JSON.parse(favMovies);
-
     if (
       favMoviesJSON.findIndex(
         (favMovie) => favMovie.movieId === movie.movieId
@@ -355,6 +357,8 @@ const Home = () => {
         ).isFavorite = true;
         return [...oldArray];
       });
+      showSuccess("Added " + movie.movieId + " to favorite list");
+      setLikedMovies(favMoviesJSON);
     } else {
       const favMoviesFiltered = favMoviesJSON.filter(
         (favMovie) => favMovie.movieId !== movie.movieId
@@ -372,6 +376,11 @@ const Home = () => {
         ).isFavorite = false;
         return [...oldArray];
       });
+      showWarning("Removed " + movie.movieId + " from favorite list");
+      setLikedMovies(favMoviesFiltered);
+      if (favMoviesFiltered.length === 0) {
+        setShowModal(false);
+      }
     }
   };
 
@@ -423,8 +432,10 @@ const Home = () => {
     setShowFilter(false);
   };
 
-  const closeLikeMovieHandler = () => {
-    console.log("Closing liked movie");
+  const copyFavoriteMoviesToClipBoard = () => {
+    const movieIds = likedMovies.map((x) => x.movieId);
+    navigator.clipboard.writeText(movieIds.join("\r\n"));
+    alert("Favorite movies had been copied to clipboard !");
   };
 
   if (genresFilter.length === 0 && !isLoading) {
@@ -434,13 +445,149 @@ const Home = () => {
   return (
     <React.Fragment>
       <div className="main-container" onClick={onMainContainerClick}>
-        <ToastContainer limit={2} />
+        <ToastContainer limit={5} />
+        {showSettings && (
+          <motion.div
+            className="backdrop"
+            variants={backdropVariants}
+            animate="visible"
+            initial="hidden"
+            exit="hidden"
+          >
+            <motion.div
+              variants={modalVariants}
+              className="modal setting-modal"
+              style={{ textAlign: "left" }}
+            >
+              <span
+                title="Close"
+                onClick={() => setShowSettings(false)}
+                className="close-modal"
+              >
+                <FontAwesomeIcon className="close-icon" icon={["fas", "x"]} />
+              </span>
+              <img
+                className="setting-modal-logo"
+                title="Feel the Eccentric"
+                src={logo2}
+                alt="logo2"
+              />
+              <h4>Disclaimer</h4>
+              <span>
+                <b>
+                  <i style={{ marginRight: 3 }}>'Javadoz'</i>
+                </b>{" "}
+                is a hobby project done solo by Calvadoz himself. App written in
+                <b style={{ marginLeft: 3 }}>ReactJS, Firebase and nodeJS</b>
+                <br />
+                This project purely for fun and to support the Discord Community
+                of Calvadoz "Secret" Lab <br />
+                <br />
+                Special thanks to: <b>R18</b> and <b>JavDatabase</b> for all
+                movie metadata
+                <br />
+                Please consider supporting the industry by purchasing the
+                original work from{" "}
+                <a
+                  href="https://www.r18.com/"
+                  title="Visit R18.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ verticalAlign: "sub", marginLeft: 4 }}
+                >
+                  <img src={r18logo} alt="r18logo" />
+                </a>
+              </span>
+              <h4 style={{ marginTop: 20 }}>Find me at</h4>
+              <div className="setting-footer">
+                <div className="setting-footer-findme">
+                  <span>
+                    <FontAwesomeIcon
+                      className="setting-footer-icon"
+                      icon={["fab", "discord"]}
+                    />
+                    Calvadoz#6718
+                  </span>
+                  <span>
+                    <a
+                      href="https://instagram.com/calvadozzzz"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="setting-footer-icon"
+                        icon={["fab", "instagram"]}
+                      />
+                      calvadozzz
+                    </a>
+                  </span>
+                  <span>
+                    <a
+                      href="https://twitter.com/calvadozzzz"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="setting-footer-icon"
+                        icon={["fab", "twitter"]}
+                      />
+                      calvadozzz
+                    </a>
+                  </span>
+                  <span>
+                    <a
+                      href="https://github.com/calvadoz"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="setting-footer-icon"
+                        icon={["fab", "github"]}
+                      />
+                      calvadoz
+                    </a>
+                  </span>
+                  <span>
+                    <a
+                      href="https://www.linkedin.com/in/kelvin-wu-a3929b56/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="setting-footer-icon"
+                        icon={["fab", "linkedin"]}
+                      />
+                      Kelvin Wu
+                    </a>
+                  </span>
+                </div>
+                <div className="setting-footer-misc">
+                  <h4>App Version: 1.0.{serverVersion.replace("v", "")}</h4>
+                  <button
+                    className="clear-favorite-list"
+                    onClick={() =>
+                      localStorage.setItem("favMovies", JSON.stringify([]))
+                    }
+                  >
+                    Clear Favorite List
+                  </button>
+                  <button
+                    className="export-favorite-list"
+                    onClick={copyFavoriteMoviesToClipBoard}
+                  >
+                    Export Favorite List
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
         <Modal
           showModal={showModal}
           setShowModal={setShowModal}
           movie={selectedMovie}
           likedMovies={likedMovies}
-          onCloseLikedMovieModal={closeLikeMovieHandler}
+          onAddToLikedMovie={(movie) => likeMovieHandler(movie)}
         />
         <header className="header">
           <img
@@ -482,7 +629,7 @@ const Home = () => {
               {selectedGenre.length > 0 && selectedGenre.toString()}
             </button>
             <motion.button
-              title="Watch List"
+              title="Liked Movie List"
               className="header-button"
               onClick={() => watchListHandler()}
             >
@@ -491,9 +638,16 @@ const Home = () => {
                   className="sort-icon"
                   icon={["fas", "heart"]}
                 />
+                <span className="liked-movie-count">
+                  {JSON.parse(localStorage.getItem("favMovies")).length}
+                </span>
               </span>
             </motion.button>
-            <motion.button title="Settings" className="header-button">
+            <motion.button
+              title="Settings"
+              className="header-button"
+              onClick={() => setShowSettings(!showSettings)}
+            >
               <span>
                 <FontAwesomeIcon
                   className="setting-icon"
@@ -566,7 +720,11 @@ const Home = () => {
                           />
                         </motion.span>
                         <span
-                          title="Like Movie"
+                          title={`${
+                            !movie.isFavorite
+                              ? "Add to Liked Movies"
+                              : "Remove from Liked Movies"
+                          }`}
                           className="button-icon"
                           onClick={() => likeMovieHandler(movie)}
                         >

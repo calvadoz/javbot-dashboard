@@ -2,7 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import React from "react";
 
-const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
+const MovieDetails = ({
+  movie,
+  setShowModal,
+  onShowTrailer,
+  onAddToLikedMovie,
+}) => {
   return (
     <React.Fragment>
       <p className="modal-movie-id">
@@ -23,17 +28,26 @@ const MovieDetails = ({ movie, setShowModal, onShowTrailer }) => {
           </video>
         )}
       </div>
-      <div className="play-full-movie-container">
+      <div className="modal-button-container">
         <button
-          onClick={() => window.open(movie.fullMovieUrl, "_blank")}
-          className="play-full-movie-button"
-          disabled={!movie.fullMovieUrl}
+          onClick={() => onAddToLikedMovie(movie)}
+          className={`liked-button ${movie.isFavorite ? "liked" : ""}`}
         >
-          <FontAwesomeIcon className="play-icon" icon={["fas", "plus"]} />
-          Add to Liked Movies
+          {!movie.isFavorite && (
+            <>
+              <FontAwesomeIcon className="play-icon" icon={["fas", "plus"]} />
+              Add to Liked Movies
+            </>
+          )}
+          {movie.isFavorite && (
+            <>
+              <FontAwesomeIcon className="play-icon" icon={["fas", "check"]} />{" "}
+              Added to Liked Movies
+            </>
+          )}
         </button>
       </div>
-      {/* <div className="play-full-movie-container">
+      {/* <div className="modal-button-container">
         <button
           onClick={() => window.open(movie.fullMovieUrl, "_blank")}
           className="play-full-movie-button"

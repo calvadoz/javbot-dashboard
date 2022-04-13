@@ -1,8 +1,12 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const LikedMovie = ({ likedMovies, onFavoriteMovieSelectedButton }) => {
+const LikedMovie = ({
+  likedMovies,
+  onFavoriteMovieSelectedButton,
+  onAddToLikedMovie,
+}) => {
   return (
     <div className="liked-movies-wrapper">
       <h2 style={{ borderBottom: "1px solid", paddingBottom: ".5em" }}>
@@ -21,16 +25,36 @@ const LikedMovie = ({ likedMovies, onFavoriteMovieSelectedButton }) => {
         </span>
       </div>
       <div className="liked-movie-thumbnail-wrapper">
-        {likedMovies.map((likedMovie) => (
-          <div key={likedMovie.movieId}>
-            <p>{likedMovie.movieId}</p>
-            <img
-              onClick={() => onFavoriteMovieSelectedButton(likedMovie)}
-              src={likedMovie.thumbnail}
-              alt="movie-thumbnail"
-            />
-          </div>
-        ))}
+        {likedMovies.length === 0 && <h2>No Liked Movies, you may close the dialog</h2>}
+        {likedMovies.length > 0 &&
+          likedMovies.map((likedMovie, index) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.1 * index } }}
+              exit={{ opacity: 0 }}
+              key={likedMovie.movieId}
+            >
+              <p className="liked-movie-title">
+                <span>{likedMovie.movieId}</span>
+                <button
+                  onClick={() => onAddToLikedMovie(likedMovie)}
+                  className="delete-button-icon"
+                  title="Remove from Liked Movies"
+                >
+                  <FontAwesomeIcon
+                    className="sort-icon"
+                    icon={["fas", "trash"]}
+                  />
+                </button>
+              </p>
+              <img
+                onClick={() => onFavoriteMovieSelectedButton(likedMovie)}
+                src={likedMovie.thumbnail}
+                alt="movie-thumbnail"
+              />
+            </motion.div>
+          ))}
       </div>
     </div>
   );

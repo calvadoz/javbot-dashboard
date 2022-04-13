@@ -63,6 +63,12 @@ body {
   button.genre:hover {
     background: rgb(180, 93, 83);
   }
+  .modal .clear-favorite-list:hover {
+    background: rgb(180, 93, 83);
+  }
+  .modal .export-favorite-list:hover {
+    background-color: #0e1c5c;
+  }
 }
 
 .header-button.genre {
@@ -72,7 +78,7 @@ body {
 }
 
 .header-button span {
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .search-text {
@@ -230,6 +236,52 @@ body {
   overflow-x: hidden;
 }
 
+.modal.setting-modal {
+  width: min(70vw, 400px);
+  height: auto;
+  top: 25px;
+  color: #333;
+  padding: 1.5em;
+}
+
+.setting-modal-logo {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.setting-modal h4 {
+  margin: 0;
+  font-size: 14px;
+}
+.setting-modal span {
+  font-size: clamp(10px, 1.5vw, 12px);
+}
+.setting-modal .setting-footer {
+  text-align: left;
+  font-size: clamp(10px, 1.5vw, 12px);
+  margin-top: 12px;
+  display: flex;
+}
+
+.setting-modal .setting-footer .setting-footer-findme {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: flex-start;
+}
+.setting-modal .setting-footer .setting-footer-icon {
+  margin-right: 0.5em;
+  font-size: 16px;
+  width: 20px;
+}
+
+.setting-modal a {
+  text-decoration: none;
+  color: #333 !important;
+}
+
 .modal .back-icon {
   width: 24px;
   height: 24px;
@@ -269,6 +321,41 @@ body {
 .modal .javadoz-video-details-container .javadoz-video-details-label {
   font-size: clamp(1rem, 2.5vw, 1.25rem) !important;
   font-weight: bold;
+}
+
+.setting-footer-misc {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.setting-footer-misc h4 {
+  font-size: clamp(0.8rem, 2.5vw, 0.8rem) !important;
+}
+
+.modal .clear-favorite-list,
+.modal .export-favorite-list {
+  border: none;
+  padding: 1em;
+  background-color: rgb(219, 114, 102);
+  color: white;
+  margin-top: 8px;
+  font-size: clamp(0.8rem, 2.5vw, 0.8rem) !important;
+  cursor: pointer;
+  transition: background 250ms ease;
+}
+
+.modal .export-favorite-list {
+  background-color: #12267e;
+}
+
+.liked-movie-count {
+  font-size: 10px !important;
+  position: absolute;
+  color: rgb(219, 114, 102);
+  font-weight: bold;
+  right: 17px;
+  top: 13px;
 }
 
 .close-modal-bottom {
@@ -336,7 +423,8 @@ body {
   font-size: 18px;
 }
 
-.play-full-movie-container .play-full-movie-button {
+.modal-button-container .play-full-movie-button,
+.modal-button-container .liked-button {
   width: 100%;
   border: none;
   background: #db7266;
@@ -346,6 +434,10 @@ body {
   letter-spacing: 1px;
   cursor: pointer;
   transition: background 250ms ease;
+}
+
+.modal-button-container .liked-button.liked {
+  background: #4ac194;
 }
 
 .play-full-movie-button:disabled {
@@ -477,7 +569,7 @@ button.genre.active {
 }
 
 .modal .liked-movie-thumbnail-wrapper img {
-  width: min(400px, 450px);
+  width: min(80vw, 300px);
   cursor: pointer;
 }
 
@@ -491,4 +583,18 @@ button.genre.active {
   box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
   padding: 1em 1.5em;
   text-align: justify;
+}
+
+.liked-movie-title {
+  display: flex;
+}
+
+.delete-button-icon {
+  border: none;
+  color: rgb(219, 114, 102);
+  background: transparent;
+  margin-left: auto;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
 }

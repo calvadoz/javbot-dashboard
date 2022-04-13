@@ -9,25 +9,17 @@ import Trailers from "./Trailers";
 import axios from "axios";
 import { showError } from "./ToastHelper";
 import LikedMovie from "./LikedMovie";
+import { backdropVariants, modalVariants } from "./Animation";
 
-const backdrop = {
-  visible: { opacity: 1 },
-  hidden: { opacity: 0 },
-};
-
-const modal = {
-  hidden: {
-    y: "-100vh",
-    opacity: 0,
-  },
-  visible: {
-    y: "200px",
-    opacity: 1,
-  },
-};
 dayjs.extend(relativeTime);
 
-const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieModal }) => {
+const Modal = ({
+  showModal,
+  setShowModal,
+  movie,
+  likedMovies,
+  onAddToLikedMovie,
+}) => {
   const modalContainerRef = useRef();
   const [selectedActress, setSelectedActress] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +34,6 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieM
   const onCloseModalHandler = () => {
     setShowModal(false);
     setSelectedActress(null);
-    onCloseLikedMovieModal();
   };
 
   const movieSelectedHandler = async (selectedTrailer) => {
@@ -104,19 +95,19 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieM
   useEffect(() => {
     setSelectedActress(null);
     setSelectedMovie(movie);
-  }, [movie, likedMovies]);
+  }, [movie, likedMovies, setShowModal]);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
         <motion.div
           className="backdrop"
-          variants={backdrop}
+          variants={backdropVariants}
           animate="visible"
           initial="hidden"
           exit="hidden"
         >
           <motion.div
-            variants={modal}
+            variants={modalVariants}
             className="modal"
             ref={modalContainerRef}
           >
@@ -153,6 +144,7 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieM
                   <MovieDetails
                     movie={selectedMovie}
                     onShowTrailer={showTrailerHandler}
+                    onAddToLikedMovie={(movie) => onAddToLikedMovie(movie)}
                     setShowModal={onCloseModalHandler}
                   />
                 </motion.div>
@@ -178,6 +170,8 @@ const Modal = ({ showModal, setShowModal, movie, likedMovies, onCloseLikedMovieM
               {likedMovies && likedMovies.length > 0 && !selectedActress && (
                 <LikedMovie
                   likedMovies={likedMovies}
+                  setShowModal={setShowModal}
+                  onAddToLikedMovie={(movie) => onAddToLikedMovie(movie)}
                   onFavoriteMovieSelectedButton={(favoriteMovie) =>
                     favoriteMovieSelectedHandler(favoriteMovie)
                   }

@@ -1,17 +1,31 @@
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 const toastOptions = {
   theme: "colored",
   position: toast.POSITION.TOP_RIGHT,
   pauseOnFocusLoss: false,
-  toastId: "some-id",
+  toastId: uuidv4(),
 };
 
-const toastOptionsInfo = {
+const toastOptionsInfoBlue = {
   theme: "colored",
   position: toast.POSITION.TOP_RIGHT,
   pauseOnFocusLoss: false,
-  style: { background: "#2741b3", fontFamily: 'Montserrat', fontSize: "14px"},
+  style: { background: "#2741b3", fontFamily: "Montserrat", fontSize: "14px" },
+};
+
+const toastOptionsInfoGreen = {
+  theme: "colored",
+  position: toast.POSITION.TOP_RIGHT,
+  pauseOnFocusLoss: false,
+  style: { background: "#27b35f", fontFamily: "Montserrat", fontSize: "14px" },
+};
+const toastOptionsInfoYellow = {
+  theme: "colored",
+  position: toast.POSITION.TOP_RIGHT,
+  pauseOnFocusLoss: false,
+  style: { background: "#d77e0f", fontFamily: "Montserrat", fontSize: "14px" },
 };
 
 export const showError = (message) => {
@@ -19,13 +33,13 @@ export const showError = (message) => {
 };
 
 export const showInfo = (message) => {
-  toast.info(message, toastOptionsInfo);
+  toast.info(message, toastOptionsInfoBlue);
 };
 
 export const showWarning = (message) => {
-  toast.warn(message, toastOptions);
+  toast.warn(message, toastOptionsInfoYellow);
 };
 
 export const showSuccess = (message) => {
-  toast.success(message, toastOptions);
+  toast.success(message, toastOptionsInfoGreen);
 };
