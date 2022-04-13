@@ -53,8 +53,16 @@ body {
   transition: all 100ms ease;
 }
 
-.header-button:hover {
-  background: #ab4f58;
+@media (min-width: 992px) {
+  .header-button:hover {
+    background: #ab4f58;
+  }
+  .actress-name-button:hover {
+    background: #ab4f58;
+  }
+  button.genre:hover {
+    background: rgb(180, 93, 83);
+  }
 }
 
 .header-button.genre {
@@ -360,10 +368,6 @@ body {
   transition: background 300ms ease;
 }
 
-.actress-name-button:hover {
-  background: #ab4f58;
-}
-
 .actress-bio {
   display: flex;
   gap: 0.5em;
@@ -458,9 +462,6 @@ button.genre {
   transition: all 250ms ease;
 }
 
-button.genre:hover {
-  background: rgb(180, 93, 83);
-}
 button.genre.active {
   background: rgb(141, 72, 65);
 }
@@ -489,5 +490,5 @@ button.genre.active {
   border-radius: 10px;
   box-shadow: 15px 15px 10px rgb(0 0 0 / 50%);
   padding: 1em 1.5em;
-  text-align:justify
+  text-align: justify;
 }

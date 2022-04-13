@@ -425,7 +425,7 @@ const Home = () => {
 
   const closeLikeMovieHandler = () => {
     console.log("Closing liked movie");
-  }
+  };
 
   if (genresFilter.length === 0 && !isLoading) {
     setupFilter();
@@ -490,6 +490,14 @@ const Home = () => {
                 <FontAwesomeIcon
                   className="sort-icon"
                   icon={["fas", "heart"]}
+                />
+              </span>
+            </motion.button>
+            <motion.button title="Settings" className="header-button">
+              <span>
+                <FontAwesomeIcon
+                  className="setting-icon"
+                  icon={["fas", "gear"]}
                 />
               </span>
             </motion.button>
