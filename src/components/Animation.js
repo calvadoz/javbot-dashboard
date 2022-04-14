@@ -13,3 +13,14 @@ export const modalVariants = {
     opacity: 1,
   },
 };
+
+export const settingModalVariants = {
+  hidden: {
+    y: "-100vh",
+    opacity: 0,
+  },
+  visible: {
+    y: "0",
+    opacity: 1,
+  },
+};

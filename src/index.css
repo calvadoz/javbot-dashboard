@@ -239,7 +239,6 @@ body {
 .modal.setting-modal {
   width: min(70vw, 400px);
   height: auto;
-  top: 25px;
   color: #333;
   padding: 1.5em;
 }

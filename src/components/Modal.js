@@ -9,7 +9,7 @@ import Trailers from "./Trailers";
 import axios from "axios";
 import { showError } from "./ToastHelper";
 import LikedMovie from "./LikedMovie";
-import { backdropVariants, modalVariants } from "./Animation";
+import { backdropVariants, modalVariants, settingModalVariants } from "./Animation";
 
 dayjs.extend(relativeTime);
 
@@ -107,7 +107,7 @@ const Modal = ({
           exit="hidden"
         >
           <motion.div
-            variants={modalVariants}
+            variants={settingModalVariants}
             className="modal"
             ref={modalContainerRef}
           >
