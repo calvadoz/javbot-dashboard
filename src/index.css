@@ -58,6 +58,15 @@ body {
   justify-content: space-around;
   align-items: center;
 }
+.header-button .genre-text {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  top: -4px;
+  margin-top: 6px;
+  font-size: 16px;
+}
 
 @media (min-width: 992px) {
   .header-button:hover {

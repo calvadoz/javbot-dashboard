@@ -210,6 +210,27 @@ const Home = () => {
       });
   };
 
+  const setupFilter = useCallback(() => {
+    const mappedMovies = map(filteredMovies, "genres").join().split(",");
+    const uniqueGenres = uniq(mappedMovies);
+
+    const genreList = [];
+    uniqueGenres.forEach((genre) => {
+      const movieCount = filter(filteredMovies, (b) =>
+        includes(b.genres, genre)
+      ).length;
+      genreList.push({ genre, movieCount });
+    });
+
+    const filteredGenres = filter(genreList, (g) => !g.genre.includes("SALE"));
+    const orderedGenres = orderBy(
+      filteredGenres,
+      ["movieCount", "genre"],
+      ["desc", "asc"]
+    );
+    setGenresFilter(orderedGenres);
+  }, [filteredMovies]);
+
   useEffect(() => {
     setIsLoading(true);
     get(javMoviesR18)
@@ -308,27 +329,6 @@ const Home = () => {
     setLikedMovies(JSON.parse(favMovies));
   }, [getServerVersion]);
 
-  const setupFilter = () => {
-    const mappedMovies = map(filteredMovies, "genres").join().split(",");
-    const uniqueGenres = uniq(mappedMovies);
-
-    const genreList = [];
-    uniqueGenres.forEach((genre) => {
-      const movieCount = filter(filteredMovies, (b) =>
-        includes(b.genres, genre)
-      ).length;
-      genreList.push({ genre, movieCount });
-    });
-
-    const filteredGenres = filter(genreList, (g) => !g.genre.includes("SALE"));
-    const orderedGenres = orderBy(
-      filteredGenres,
-      ["movieCount", "genre"],
-      ["desc", "asc"]
-    );
-    setGenresFilter(orderedGenres);
-  };
-
   const filterHandler = (e) => {
     e.stopPropagation();
     setShowFilter(!showFilter);
@@ -409,9 +409,10 @@ const Home = () => {
       //     }
       //   }
       // });
-      const filteredMovieWithGenre = filter(allMovies, (movie) =>
-        movie.genres.includes(genre)
-      );
+      console.log(allMovies);
+      const filteredMovieWithGenre = filter(allMovies, (movie) => {
+        return movie.genres ? movie.genres.includes(genre) : [];
+      });
       setFilteredMovies([...filteredMovieWithGenre]);
       setSelectedGenre([genre]);
     }
@@ -634,7 +635,9 @@ const Home = () => {
                   />
                 </span>
               )}
-              {selectedGenre.length > 0 && selectedGenre.toString()}
+              {selectedGenre.length > 0 && (
+                <span className="genre-text">{selectedGenre.toString()}</span>
+              )}
             </button>
             <motion.button
               title="Liked Movie List"
