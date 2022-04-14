@@ -338,28 +338,35 @@ const Home = () => {
     const favMovies = localStorage.getItem("favMovies");
     let favMoviesJSON;
     if (favMovies) favMoviesJSON = JSON.parse(favMovies);
+    console.log("JSON parsed: ", favMoviesJSON);
+    console.log(movie.movieId);
     if (
       favMoviesJSON.findIndex(
         (favMovie) => favMovie.movieId === movie.movieId
       ) === -1
     ) {
+      if (movie.firebaseId) {
+        setAllMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === movie.guid
+          ).isFavorite = true;
+          return [...oldArray];
+        });
+        setFilteredMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === movie.guid
+          ).isFavorite = true;
+          return [...oldArray];
+        });
+      } else {
+        movie.isFavorite = true;
+      }
       favMoviesJSON.push(movie);
       localStorage.setItem("favMovies", JSON.stringify(favMoviesJSON));
-      setAllMovies((oldArray) => {
-        oldArray.find(
-          (oldRecord) => oldRecord.guid === movie.guid
-        ).isFavorite = true;
-        return [...oldArray];
-      });
-      setFilteredMovies((oldArray) => {
-        oldArray.find(
-          (oldRecord) => oldRecord.guid === movie.guid
-        ).isFavorite = true;
-        return [...oldArray];
-      });
-      showSuccess("Added " + movie.movieId + " to favorite list");
       setLikedMovies(favMoviesJSON);
+      showSuccess("Added " + movie.movieId + " to favorite list");
     } else {
+      console.log("removing movie: ", movie);
       const favMoviesFiltered = favMoviesJSON.filter(
         (favMovie) => favMovie.movieId !== movie.movieId
       );
@@ -477,7 +484,7 @@ const Home = () => {
                 <b>
                   <i style={{ marginRight: 3 }}>'Javadoz'</i>
                 </b>{" "}
-                is a hobby project done solo by Calvadoz himself. 
+                is a hobby project done solo by Calvadoz himself.
                 <br />
                 This project purely for fun and to support the Discord Community
                 of Calvadoz "Secret" Lab <br />

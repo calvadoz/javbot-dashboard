@@ -46,6 +46,8 @@ const Modal = ({
         selectedTrailer
     );
     const trailerMovie = trailerMovieReq.data;
+    trailerMovie.movieId = trailerMovie.id;
+    trailerMovie.thumbnail = trailerMovie.poster;
     if (!trailerMovie.trailer) {
       showError("No Trailer found for this movie, please refresh page");
       setSelectedMovie(null);
