@@ -1,48 +1,44 @@
 <div id="top"></div>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="images/logo-split-with-text.svg" alt="Logo" width="125" height="125">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+<h3 align="center">Javadoz - Your Personalized JAV Assistant</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    <b>
+      <i style={{ marginRight: 3 }}>'Javadoz'</i>
+    </b>
+    is a hobby project created by Calvadoz himself.
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    This project purely for fun and to support the Discord Community
+    of Calvadoz "Secret" Lab <b><i>"#gasm-lab"</i></b><br />
+    <br />
+    Special thanks to: <b>R18</b> and <b>JavDatabase</b> for all
+    movie metadata
+    <br />
+    Please consider supporting the industry by purchasing the
+    original work from
+    <a
+      href="https://www.r18.com/"
+      title="Visit R18.com"
+      target="_blank"
+      rel="noreferrer"
+      style={{ verticalAlign: "sub", marginLeft: 4 }}
+    >
+      <img src="images/r18logo.svg" alt="r18logo" />
+    </a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <br />
+    <a href="https://github.com/calvadoz/javbot-dashboard">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/calvadoz/javbot-dashboard/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/calvadoz/javbot-dashboard/issues">Request Feature</a>
   </p>
 </div>
 
@@ -76,34 +72,25 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-
-- Your time should be focused on creating something amazing. A project that solves a problem and helps others
-- You shouldn't be doing the same tasks over and over like creating a README from scratch
-- You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+![Product Name Screen Shot][product-screenshot]
+![Product Name Screen Shot][product-screenshot2]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+<!-- - [Next.js](https://nextjs.org/) -->
 
-- [Next.js](https://nextjs.org/)
 - [React.js](https://reactjs.org/)
-- [Vue.js](https://vuejs.org/)
-- [Angular](https://angular.io/)
-- [Svelte](https://svelte.dev/)
-- [Laravel](https://laravel.com)
-- [Bootstrap](https://getbootstrap.com)
-- [JQuery](https://jquery.com)
+- [Node.js](https://nodejs.org/)
+- [Firebase.js](https://firebase.com/)
+- [Puppeteer](https://github.com/puppeteer/puppeteer)
+  <!-- - [Vue.js](https://vuejs.org/) -->
+  <!-- - [Angular](https://angular.io/) -->
+  <!-- - [Svelte](https://svelte.dev/) -->
+  <!-- - [Laravel](https://laravel.com) -->
+  <!-- - [Bootstrap](https://getbootstrap.com) -->
+  <!-- - [JQuery](https://jquery.com) -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -111,61 +98,67 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+This also requires you to run the server side code found at <a href="https://github.com/calvadoz/project-javadoz">here</a>
 
 - npm
   ```sh
   npm install npm@latest -g
   ```
+  This website requires you to have your own personal Firebase configuration and pass it as environment variable
+
+```
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  // The value of databaseURL depends on the location of the database
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  // For Firebase JavaScript SDK v7.20.0 and later, measurementId is an optional field
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+};
+```
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Make sure your Firebase config is up and running, pointing to your own account
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/calvadoz/javbot-dashboard.git
    ```
 3. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = "ENTER YOUR API";
+4. Run App
+   ```sh
+   npm start
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+<!-- ## Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p> -->
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-  - [ ] Chinese
-  - [ ] Spanish
+- [ ] Lazy Loading for better performance
+- [ ] UI highlight on search
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/calvadoz/javbot-dashboard/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -198,9 +191,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Your Name - [@calvadozz](https://twitter.com/calvadozzzz) - wu.kelvin91@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/calvadoz/javbot-dashboard](https://github.com/calvadoz/javbot-dashboard)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -208,32 +201,35 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-- [Choose an Open Source License](https://choosealicense.com)
-- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+- [Exelquiz - as my hands on beta tester]()
+- [Entire thanks to my Discord community for requesting movie]()
+- [Discord Bot API](https://discord.com)
 - [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
 - [Malven's Grid Cheatsheet](https://grid.malven.co/)
 - [Img Shields](https://shields.io)
 - [GitHub Pages](https://pages.github.com)
 - [Font Awesome](https://fontawesome.com)
-- [React Icons](https://react-icons.github.io/react-icons/search)
+- [React Toastify](https://www.npmjs.com/package/react-toastify)
+- [R18](https://r18.com)
+- [JavDatabase](https://javdatabase.com)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-url]: https://github.com/github_username/repo_name/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-url]: https://github.com/github_username/repo_name/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-url]: https://github.com/github_username/repo_name/issues
+[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/calvadoz/javbot-dashboard/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://linkedin.com/in/kelvin-wu-a3929b56
+[product-screenshot]: images/javadoz-1.jpg
+[product-screenshot2]: images/javadoz-2.jpg

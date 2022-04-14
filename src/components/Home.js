@@ -29,7 +29,7 @@ import { ToastContainer } from "react-toastify";
 import { showError, showInfo, showSuccess, showWarning } from "./ToastHelper";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
-import { backdropVariants, modalVariants } from "./Animation";
+import { backdropVariants, settingModalVariants } from "./Animation";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -455,7 +455,7 @@ const Home = () => {
             exit="hidden"
           >
             <motion.div
-              variants={modalVariants}
+              variants={settingModalVariants}
               className="modal setting-modal"
               style={{ textAlign: "left" }}
             >
@@ -477,8 +477,7 @@ const Home = () => {
                 <b>
                   <i style={{ marginRight: 3 }}>'Javadoz'</i>
                 </b>{" "}
-                is a hobby project done solo by Calvadoz himself. App written in
-                <b style={{ marginLeft: 3 }}>ReactJS, Firebase and nodeJS</b>
+                is a hobby project done solo by Calvadoz himself. 
                 <br />
                 This project purely for fun and to support the Discord Community
                 of Calvadoz "Secret" Lab <br />

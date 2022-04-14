@@ -20,7 +20,7 @@ export const settingModalVariants = {
     opacity: 0,
   },
   visible: {
-    y: "0",
+    y: "100px",
     opacity: 1,
   },
 };

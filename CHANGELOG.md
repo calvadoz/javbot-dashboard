@@ -1,15 +1,12 @@
 # Changelog
-
+## v1.0.92
+- Updated to React 18
+- Modified UI dialog position
 ## v1.0.0
 
 ### Added or Changed
-- Added this changelog :)
-- Fixed typos in both templates
-- Back to top links
-- Added more "Built With" frameworks/libraries
-- Changed table of contents to start collapsed
-- Added checkboxes for major features on roadmap
+- First Released of the app
 
-### Removed
+<!-- ### Removed
 
-- Some packages/libraries from acknowledgements I no longer use
+- Some packages/libraries from acknowledgements I no longer use -->
