@@ -53,6 +53,12 @@ body {
   transition: all 100ms ease;
 }
 
+.header-button .icon-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @media (min-width: 992px) {
   .header-button:hover {
     background: #ab4f58;
@@ -166,7 +172,7 @@ body {
   padding: 0.5em;
   font-weight: bold;
   background-color: #db7266;
-  background-image: linear-gradient(315deg,#db7266,#c5534a 74%);
+  background-image: linear-gradient(315deg, #db7266, #c5534a 74%);
   width: 75%;
 }
 .button-container {

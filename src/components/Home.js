@@ -619,7 +619,7 @@ const Home = () => {
               onClick={filterHandler}
             >
               {selectedGenre.length === 0 && (
-                <span>
+                <span className="icon-wrapper">
                   <FontAwesomeIcon
                     className="filter-icon"
                     icon={["fas", "filter"]}
@@ -633,7 +633,7 @@ const Home = () => {
               className="header-button"
               onClick={() => watchListHandler()}
             >
-              <span>
+              <span className="icon-wrapper">
                 <FontAwesomeIcon
                   className="sort-icon"
                   icon={["fas", "heart"]}
@@ -648,7 +648,7 @@ const Home = () => {
               className="header-button"
               onClick={() => setShowSettings(!showSettings)}
             >
-              <span>
+              <span className="icon-wrapper">
                 <FontAwesomeIcon
                   className="setting-icon"
                   icon={["fas", "gear"]}
