@@ -338,8 +338,6 @@ const Home = () => {
     const favMovies = localStorage.getItem("favMovies");
     let favMoviesJSON;
     if (favMovies) favMoviesJSON = JSON.parse(favMovies);
-    console.log("JSON parsed: ", favMoviesJSON);
-    console.log(movie.movieId);
     if (
       favMoviesJSON.findIndex(
         (favMovie) => favMovie.movieId === movie.movieId
@@ -391,8 +389,8 @@ const Home = () => {
         setShowModal(false);
         return;
       }
-      setSelectedMovie(movie);
     }
+    setSelectedMovie(movie);
   };
 
   const genreFilterClickHandler = (genre) => {
