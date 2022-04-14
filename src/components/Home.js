@@ -371,23 +371,27 @@ const Home = () => {
         (favMovie) => favMovie.movieId !== movie.movieId
       );
       localStorage.setItem("favMovies", JSON.stringify(favMoviesFiltered));
-      setAllMovies((oldArray) => {
-        oldArray.find(
-          (oldRecord) => oldRecord.guid === movie.guid
-        ).isFavorite = false;
-        return [...oldArray];
-      });
-      setFilteredMovies((oldArray) => {
-        oldArray.find(
-          (oldRecord) => oldRecord.guid === movie.guid
-        ).isFavorite = false;
-        return [...oldArray];
-      });
+      if (movie.firebaseId) {
+        setAllMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === movie.guid
+          ).isFavorite = false;
+          return [...oldArray];
+        });
+        setFilteredMovies((oldArray) => {
+          oldArray.find(
+            (oldRecord) => oldRecord.guid === movie.guid
+          ).isFavorite = false;
+          return [...oldArray];
+        });
+      }
       showWarning("Removed " + movie.movieId + " from favorite list");
       setLikedMovies(favMoviesFiltered);
       if (favMoviesFiltered.length === 0) {
         setShowModal(false);
+        return;
       }
+      setSelectedMovie(movie);
     }
   };
 
