@@ -97,7 +97,7 @@ const Modal = ({
   useEffect(() => {
     setSelectedActress(null);
     setSelectedMovie(movie);
-  }, [movie, likedMovies, setShowModal]);
+  }, [movie, likedMovies]);
   return (
     <AnimatePresence exitBeforeEnter>
       {showModal && (
