@@ -34,6 +34,7 @@ const Modal = ({
   const onCloseModalHandler = () => {
     setShowModal(false);
     setSelectedActress(null);
+    setSelectedMovie(null);
   };
 
   const movieSelectedHandler = async (selectedTrailer) => {
